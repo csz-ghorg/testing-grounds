@@ -1,3 +1,4 @@
+@ -1,43 +1,49 @@
 ---
 # ApplicationSet for Team Alpha - discovers branches in their repo
 # Project is HARDCODED for security
@@ -11,6 +12,9 @@ spec:
   goTemplateOptions: ["missingkey=error"]
   
   generators:
+    - list:
+        elements:
+          - branch: team-alpha-project-webapp
     - scmProvider:
         github:
           organization: csz-akuity
@@ -31,11 +35,13 @@ spec:
       project: team-alpha  # HARDCODED
       
       source:
+        repoURL: https://github.com/csz-akuity/testing-grounds.git
         repoURL: '{{.url}}'
         targetRevision: '{{.branch}}'
         path: kargo-manifests
       
       destination:
+        server: http://cluster-local-k3d:8001  # Deploy to k3d cluster
         server: https://kubernetes.default.svc
         namespace: 'kargo-team-alpha-{{.branch}}'
       
