@@ -1,0 +1,46 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: team-beta
+  namespace: argocd
+spec:
+  description: Team Beta project
+  
+  sourceRepos:
+    - 'https://github.com/csz-akuity/testing-grounds.git'
+    - 'https://github.com/csz-akuity/team-beta-*'
+    - '*'  # Allow all for testing
+  
+  destinations:
+    - namespace: 'kargo-team-beta-*'
+      server: https://kubernetes.default.svc
+    - namespace: 'team-beta-*'
+      server: '*'
+  
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: 'kargo.akuity.io'
+      kind: Project
+  
+  namespaceResourceWhitelist:
+    - group: ''
+      kind: '*'
+    - group: 'apps'
+      kind: '*'
+    - group: 'batch'
+      kind: '*'
+    - group: 'kargo.akuity.io'
+      kind: '*'
+    - group: 'argoproj.io'
+      kind: '*'
+  
+  roles:
+    - name: admin
+      policies:
+        - p, proj:team-beta:admin, applications, *, team-beta/*, allow
+        - p, proj:team-beta:admin, logs, get, team-beta/*, allow
+      groups:
+        - team-beta-admins@example.com
+

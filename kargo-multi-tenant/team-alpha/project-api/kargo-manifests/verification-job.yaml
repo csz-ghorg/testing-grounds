@@ -1,0 +1,55 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: verify-api-health
+  namespace: kargo-team-alpha-team-alpha-project-api
+spec:
+  metrics:
+    - name: check-api-pods
+      provider:
+        job:
+          spec:
+            template:
+              metadata:
+                annotations:
+                  iam.gke.io/gcp-service-account: kargo-team-alpha@project-id.iam.gserviceaccount.com
+              spec:
+                serviceAccountName: kargo-agent
+                restartPolicy: Never
+                containers:
+                  - name: verify
+                    image: google/cloud-sdk:alpine
+                    command:
+                      - /bin/sh
+                      - -c
+                      - |
+                        gcloud secrets versions access latest \
+                          --secret="team-alpha-app-cluster-kubeconfig" > /tmp/kubeconfig
+                        export KUBECONFIG=/tmp/kubeconfig
+                        
+                        kubectl wait --for=condition=ready pod \
+                          -l app=api \
+                          -n team-alpha-api-dev \
+                          --timeout=300s
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: verify-api-endpoints
+  namespace: kargo-team-alpha-team-alpha-project-api
+spec:
+  metrics:
+    - name: health-check
+      initialDelay: 60s
+      interval: 30s
+      count: 3
+      successCondition: result.statusCode == 200
+      provider:
+        web:
+          url: "https://api.team-alpha.example.com/health"
+          headers:
+            - key: "Content-Type"
+              value: "application/json"
+

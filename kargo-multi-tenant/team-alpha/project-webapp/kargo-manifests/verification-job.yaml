@@ -1,0 +1,111 @@
+---
+# Analysis Template - Runs verification job with workload identity
+# Job runs in platform cluster but checks app cluster via kubeconfig
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: verify-deployment-health
+  namespace: kargo-team-alpha-team-alpha-project-webapp
+spec:
+  metrics:
+    - name: check-pods-running
+      provider:
+        job:
+          spec:
+            template:
+              metadata:
+                annotations:
+                  # GCP Workload Identity annotation
+                  iam.gke.io/gcp-service-account: kargo-team-alpha@project-id.iam.gserviceaccount.com
+              spec:
+                serviceAccountName: kargo-agent
+                restartPolicy: Never
+                
+                containers:
+                  - name: verify
+                    image: google/cloud-sdk:alpine
+                    command:
+                      - /bin/sh
+                      - -c
+                      - |
+                        # Get kubeconfig for app cluster from GCP Secret Manager
+                        gcloud secrets versions access latest \
+                          --secret="team-alpha-app-cluster-kubeconfig" \
+                          > /tmp/kubeconfig
+                        
+                        export KUBECONFIG=/tmp/kubeconfig
+                        
+                        # Check if pods are running
+                        kubectl wait --for=condition=ready pod \
+                          -l app=webapp \
+                          -n team-alpha-webapp-dev \
+                          --timeout=300s
+                        
+                        # Check if all replicas are up
+                        READY=$(kubectl get deployment webapp \
+                          -n team-alpha-webapp-dev \
+                          -o jsonpath='{.status.readyReplicas}')
+                        
+                        DESIRED=$(kubectl get deployment webapp \
+                          -n team-alpha-webapp-dev \
+                          -o jsonpath='{.spec.replicas}')
+                        
+                        if [ "$READY" -eq "$DESIRED" ]; then
+                          echo "SUCCESS: $READY/$DESIRED replicas ready"
+                          exit 0
+                        else
+                          echo "FAILED: Only $READY/$DESIRED replicas ready"
+                          exit 1
+                        fi
+
+---
+# Verification for rollout completion (checks Argo Rollouts)
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: verify-rollout-complete
+  namespace: kargo-team-alpha-team-alpha-project-webapp
+spec:
+  metrics:
+    - name: check-rollout
+      initialDelay: 30s
+      interval: 30s
+      count: 10
+      successCondition: result == "Healthy"
+      provider:
+        job:
+          spec:
+            template:
+              metadata:
+                annotations:
+                  iam.gke.io/gcp-service-account: kargo-team-alpha@project-id.iam.gserviceaccount.com
+              spec:
+                serviceAccountName: kargo-agent
+                restartPolicy: Never
+                
+                containers:
+                  - name: verify
+                    image: argoproj/kubectl-argo-rollouts:latest
+                    command:
+                      - /bin/sh
+                      - -c
+                      - |
+                        # Get kubeconfig from GCP Secret Manager
+                        gcloud secrets versions access latest \
+                          --secret="team-alpha-app-cluster-kubeconfig" \
+                          > /tmp/kubeconfig
+                        
+                        export KUBECONFIG=/tmp/kubeconfig
+                        
+                        # Check rollout status
+                        kubectl argo rollouts status webapp \
+                          -n team-alpha-webapp-prod \
+                          --timeout=300s
+                        
+                        # Get rollout health
+                        STATUS=$(kubectl argo rollouts status webapp \
+                          -n team-alpha-webapp-prod \
+                          -o jsonpath='{.status.phase}')
+                        
+                        echo "$STATUS"
+

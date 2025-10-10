@@ -1,0 +1,84 @@
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: dev
+  namespace: kargo-team-alpha-team-alpha-project-api
+spec:
+  subscriptions:
+    warehouse: api
+  
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/csz-akuity/argocd-example-apps.git
+            branch: main
+            checkout:
+              - branch: main
+                create: true
+                path: ./config
+        
+        - uses: kustomize-set-image
+          config:
+            path: ./config/helm-guestbook
+            images:
+              - image: redis
+        
+        - uses: git-commit
+          config:
+            path: ./config
+        
+        - uses: git-push
+          config:
+            path: ./config
+            targetBranch: team-alpha-api-dev
+  
+  verification:
+    analysisTemplates:
+      - name: verify-api-health
+
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod
+  namespace: kargo-team-alpha-team-alpha-project-api
+spec:
+  subscriptions:
+    upstreamStages:
+      - name: dev
+  
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/csz-akuity/argocd-example-apps.git
+            branch: main
+            checkout:
+              - branch: main
+                create: true
+                path: ./config
+        
+        - uses: kustomize-set-image
+          config:
+            path: ./config/helm-guestbook
+            images:
+              - image: redis
+        
+        - uses: git-commit
+          config:
+            path: ./config
+        
+        - uses: git-push
+          config:
+            path: ./config
+            targetBranch: team-alpha-api-prod
+  
+  verification:
+    analysisTemplates:
+      - name: verify-api-health
+      - name: verify-api-endpoints
+

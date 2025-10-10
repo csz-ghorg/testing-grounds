@@ -1,0 +1,118 @@
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: dev
+  namespace: kargo-team-beta-team-beta-project-mobile
+spec:
+  subscriptions:
+    warehouse: mobile
+  
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/csz-akuity/argocd-example-apps.git
+            branch: main
+            checkout:
+              - branch: main
+                create: true
+                path: ./config
+        
+        - uses: kustomize-set-image
+          config:
+            path: ./config/kustomize-guestbook
+            images:
+              - image: postgres
+        
+        - uses: git-commit
+          config:
+            path: ./config
+        
+        - uses: git-push
+          config:
+            path: ./config
+            targetBranch: team-beta-mobile-dev
+  
+  verification:
+    analysisTemplates:
+      - name: verify-mobile-health
+
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod
+  namespace: kargo-team-beta-team-beta-project-mobile
+spec:
+  subscriptions:
+    upstreamStages:
+      - name: dev
+  
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/csz-akuity/argocd-example-apps.git
+            branch: main
+            checkout:
+              - branch: main
+                create: true
+                path: ./config
+        
+        - uses: kustomize-set-image
+          config:
+            path: ./config/kustomize-guestbook
+            images:
+              - image: postgres
+        
+        - uses: git-commit
+          config:
+            path: ./config
+        
+        - uses: git-push
+          config:
+            path: ./config
+            targetBranch: team-beta-mobile-prod
+  
+  verification:
+    analysisTemplates:
+      - name: verify-mobile-health
+      - name: verify-mobile-e2e
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: verify-mobile-health
+  namespace: kargo-team-beta-team-beta-project-mobile
+spec:
+  metrics:
+    - name: check-pods
+      provider:
+        job:
+          spec:
+            template:
+              metadata:
+                annotations:
+                  iam.gke.io/gcp-service-account: kargo-team-beta@project-id.iam.gserviceaccount.com
+              spec:
+                serviceAccountName: kargo-agent
+                restartPolicy: Never
+                containers:
+                  - name: verify
+                    image: google/cloud-sdk:alpine
+                    command:
+                      - /bin/sh
+                      - -c
+                      - |
+                        gcloud secrets versions access latest \
+                          --secret="team-beta-app-cluster-kubeconfig" > /tmp/kubeconfig
+                        export KUBECONFIG=/tmp/kubeconfig
+                        
+                        kubectl wait --for=condition=ready pod \
+                          -l app=mobile \
+                          -n team-beta-mobile-dev \
+                          --timeout=300s
+

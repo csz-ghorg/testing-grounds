@@ -1,0 +1,60 @@
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: mobile
+  namespace: kargo-team-beta-team-beta-project-mobile
+spec:
+  interval: 5m
+  
+  subscriptions:
+    # Using Postgres as example mobile backend
+    - image:
+        repoURL: postgres
+        semverConstraint: ^16.0.0
+        strictSemvers: true
+        discoveryLimit: 5
+        platform: linux/amd64
+    
+    - git:
+        repoURL: https://github.com/csz-akuity/argocd-example-apps.git
+        branch: main
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: mobile-secrets
+  namespace: kargo-team-beta-team-beta-project-mobile
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: gcpsm-secret-store
+    kind: SecretStore
+  
+  target:
+    name: mobile-repo-creds
+  
+  data:
+    - secretKey: username
+      remoteRef:
+        key: team-beta-mobile-git-username
+    - secretKey: password
+      remoteRef:
+        key: team-beta-mobile-git-token
+---
+apiVersion: external-secrets.io/v1beta1
+kind: SecretStore
+metadata:
+  name: gcpsm-secret-store
+  namespace: kargo-team-beta-team-beta-project-mobile
+spec:
+  provider:
+    gcpsm:
+      projectID: "project-id"
+      auth:
+        workloadIdentity:
+          clusterLocation: us-central1
+          clusterName: platform-cluster
+          serviceAccountRef:
+            name: kargo-agent
+

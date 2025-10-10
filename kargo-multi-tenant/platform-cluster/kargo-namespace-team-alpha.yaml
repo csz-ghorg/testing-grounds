@@ -1,0 +1,34 @@
+---
+# Dedicated namespace for Team Alpha's Kargo agent
+# This runs in the platform cluster, NOT the app cluster
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kargo-team-alpha
+  annotations:
+    iam.gke.io/gcp-service-account: kargo-team-alpha@project-id.iam.gserviceaccount.com
+---
+# ServiceAccount with GCP Workload Identity
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kargo-agent
+  namespace: kargo-team-alpha
+  annotations:
+    iam.gke.io/gcp-service-account: kargo-team-alpha@project-id.iam.gserviceaccount.com
+---
+# RoleBinding for Kargo agent
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kargo-agent
+  namespace: kargo-team-alpha
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kargo-agent
+subjects:
+  - kind: ServiceAccount
+    name: kargo-agent
+    namespace: kargo-team-alpha
+

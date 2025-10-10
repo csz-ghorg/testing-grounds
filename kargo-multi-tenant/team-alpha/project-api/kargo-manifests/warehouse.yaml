@@ -1,0 +1,61 @@
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: api
+  namespace: kargo-team-alpha-team-alpha-project-api
+spec:
+  interval: 5m
+  
+  subscriptions:
+    # Using Redis as example API service
+    - image:
+        repoURL: redis
+        semverConstraint: ^7.0.0
+        strictSemvers: true
+        discoveryLimit: 5
+        platform: linux/amd64
+    
+    - git:
+        repoURL: https://github.com/csz-akuity/argocd-example-apps.git
+        branch: main
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: api-secrets
+  namespace: kargo-team-alpha-team-alpha-project-api
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: gcpsm-secret-store
+    kind: SecretStore
+  
+  target:
+    name: api-repo-creds
+    creationPolicy: Owner
+  
+  data:
+    - secretKey: username
+      remoteRef:
+        key: team-alpha-api-git-username
+    - secretKey: password
+      remoteRef:
+        key: team-alpha-api-git-token
+---
+apiVersion: external-secrets.io/v1beta1
+kind: SecretStore
+metadata:
+  name: gcpsm-secret-store
+  namespace: kargo-team-alpha-team-alpha-project-api
+spec:
+  provider:
+    gcpsm:
+      projectID: "project-id"
+      auth:
+        workloadIdentity:
+          clusterLocation: us-central1
+          clusterName: platform-cluster
+          serviceAccountRef:
+            name: kargo-agent
+
