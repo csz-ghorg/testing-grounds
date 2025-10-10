@@ -5,7 +5,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: kargo-team-alpha
-  namespace: argocd
+  namespace: akuity
 spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
@@ -15,9 +15,7 @@ spec:
         github:
           organization: csz-akuity
           allBranches: true
-          tokenRef:
-            secretName: github-token
-            key: token
+          # Uses credential template instead of hardcoded secret
         cloneProtocol: https
         filters:
           - repositoryMatch: ^testing-grounds$

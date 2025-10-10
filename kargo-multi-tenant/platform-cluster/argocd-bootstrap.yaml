@@ -6,7 +6,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kargo-platform
-  namespace: argocd
+  namespace: akuity
 spec:
   project: default
   
@@ -20,7 +20,7 @@ spec:
   
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: akuity
   
   syncPolicy:
     automated:

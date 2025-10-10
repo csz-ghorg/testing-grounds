@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
   name: team-alpha
-  namespace: argocd
+  namespace: akuity
 spec:
   description: Team Alpha project
   
