@@ -108,4 +108,3 @@ spec:
                           -o jsonpath='{.status.phase}')
                         
                         echo "$STATUS"
-

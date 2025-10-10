@@ -61,4 +61,3 @@ spec:
           clusterName: platform-cluster
           serviceAccountRef:
             name: kargo-agent
-

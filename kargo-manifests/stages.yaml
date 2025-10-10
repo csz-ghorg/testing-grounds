@@ -102,4 +102,3 @@ spec:
     analysisRunMetadata:
       annotations:
         iam.gke.io/gcp-service-account: kargo-team-alpha@project-id.iam.gserviceaccount.com
-
