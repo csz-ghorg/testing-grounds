@@ -11,15 +11,9 @@ spec:
   goTemplateOptions: ["missingkey=error"]
   
   generators:
-    - scmProvider:
-        github:
-          organization: csz-akuity
-          allBranches: true
-          # Uses credential template instead of hardcoded secret
-        cloneProtocol: https
-        filters:
-          - repositoryMatch: ^testing-grounds$
-            branchMatch: ^team-alpha-.*
+    - list:
+        elements:
+          - branch: team-alpha-project-webapp
   
   template:
     metadata:
@@ -31,12 +25,12 @@ spec:
       project: team-alpha  # HARDCODED
       
       source:
-        repoURL: '{{.url}}'
+        repoURL: https://github.com/csz-akuity/testing-grounds.git
         targetRevision: '{{.branch}}'
         path: kargo-manifests
       
       destination:
-        server: https://kubernetes.default.svc
+        server: http://cluster-local-k3d:8001  # Deploy to k3d cluster
         namespace: 'kargo-team-alpha-{{.branch}}'
       
       syncPolicy:
@@ -45,4 +39,3 @@ spec:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
-

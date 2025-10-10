@@ -41,6 +41,23 @@ spec:
       policies:
         - p, proj:team-alpha:admin, applications, *, team-alpha/*, allow
         - p, proj:team-alpha:admin, logs, get, team-alpha/*, allow
+        - p, proj:team-alpha:admin, repositories, get, *, allow
+        - p, proj:team-alpha:admin, certificates, get, *, allow
+        - p, proj:team-alpha:admin, accounts, get, *, allow
+        - p, proj:team-alpha:admin, gpgkeys, get, *, allow
+        - p, proj:team-alpha:admin, clusters, get, *, allow
       groups:
-        - team-alpha-admins@example.com
+        - admin  # Built-in admin group
+    
+    - name: readonly
+      policies:
+        - p, proj:team-alpha:readonly, applications, get, team-alpha/*, allow
+        - p, proj:team-alpha:readonly, logs, get, team-alpha/*, allow
+        - p, proj:team-alpha:readonly, repositories, get, *, allow
+        - p, proj:team-alpha:readonly, certificates, get, *, allow
+        - p, proj:team-alpha:readonly, accounts, get, *, allow
+        - p, proj:team-alpha:readonly, gpgkeys, get, *, allow
+        - p, proj:team-alpha:readonly, clusters, get, *, allow
+      groups:
+        - '*'  # Everyone else gets read-only access
 
