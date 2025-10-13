@@ -1,0 +1,104 @@
+---
+# Kargo Project for Team Alpha - Webapp
+# Branch: team-alpha-webapp
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Project
+metadata:
+  name: webapp
+  namespace: team-alpha-webapp
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: webapp
+  namespace: team-alpha-webapp
+spec:
+  interval: 5m
+  subscriptions:
+    # Watch nginx image
+    - image:
+        repoURL: public.ecr.aws/nginx/nginx
+        semverConstraint: ^1.26.0
+        strictSemvers: true
+        discoveryLimit: 5
+    
+    # Watch this feature branch for config changes
+    - git:
+        repoURL: https://github.com/csz-akuity/kargo-demo.git
+        branch: team-alpha-webapp  # Points to this feature branch
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test
+  namespace: team-alpha-webapp
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: webapp
+      sources:
+        direct: true
+  
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/csz-akuity/kargo-demo.git
+            checkout:
+              - branch: team-alpha-webapp
+                path: ./src
+        
+        - uses: kustomize-set-image
+          config:
+            path: ./src/stages/test
+            images:
+              - image: public.ecr.aws/nginx/nginx
+        
+        - uses: git-commit
+          config:
+            path: ./src
+        
+        - uses: git-push
+          config:
+            path: ./src
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod
+  namespace: team-alpha-webapp
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: webapp
+      sources:
+        stages:
+          - test
+  
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/csz-akuity/kargo-demo.git
+            checkout:
+              - branch: team-alpha-webapp
+                path: ./src
+        
+        - uses: kustomize-set-image
+          config:
+            path: ./src/stages/prod
+            images:
+              - image: public.ecr.aws/nginx/nginx
+        
+        - uses: git-commit
+          config:
+            path: ./src
+        
+        - uses: git-push
+          config:
+            path: ./src
+

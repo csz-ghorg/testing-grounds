@@ -1,0 +1,48 @@
+---
+# AppProject for Team Alpha
+# Controls what Team Alpha can see and do
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: team-alpha
+  namespace: akuity
+spec:
+  description: Team Alpha - can only see their own Kargo projects
+  
+  sourceRepos:
+    - 'https://github.com/csz-akuity/testing-grounds.git'
+    - '*'  # Allow other repos for Kargo promotions
+  
+  destinations:
+    - namespace: 'team-alpha-*'  # Only team-alpha namespaces
+      server: '*'
+  
+  clusterResourceWhitelist:
+    - group: 'kargo.akuity.io'
+      kind: Project
+  
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  
+  # RBAC - maps SSO groups to permissions
+  roles:
+    - name: admin
+      description: Team Alpha admins
+      policies:
+        - p, proj:team-alpha:admin, applications, *, team-alpha/*, allow
+        - p, proj:team-alpha:admin, logs, get, team-alpha/*, allow
+      groups:
+        - team-alpha-admins  # SSO group
+        - myorg:team-alpha   # GitHub team
+    
+    - name: developer
+      description: Team Alpha developers
+      policies:
+        - p, proj:team-alpha:developer, applications, get, team-alpha/*, allow
+        - p, proj:team-alpha:developer, applications, sync, team-alpha/*, allow
+        - p, proj:team-alpha:developer, logs, get, team-alpha/*, allow
+      groups:
+        - team-alpha-developers
+        - myorg:team-alpha-dev
+

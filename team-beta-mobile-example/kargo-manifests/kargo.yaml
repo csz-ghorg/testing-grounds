@@ -1,0 +1,104 @@
+---
+# Kargo Project for Team Beta - Mobile
+# Branch: team-beta-mobile
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Project
+metadata:
+  name: mobile
+  namespace: team-beta-mobile
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: mobile
+  namespace: team-beta-mobile
+spec:
+  interval: 5m
+  subscriptions:
+    # Watch postgres image
+    - image:
+        repoURL: postgres
+        semverConstraint: ^16.0.0
+        strictSemvers: true
+        discoveryLimit: 5
+    
+    # Watch this feature branch
+    - git:
+        repoURL: https://github.com/csz-akuity/kargo-demo.git
+        branch: team-beta-mobile
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test
+  namespace: team-beta-mobile
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: mobile
+      sources:
+        direct: true
+  
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/csz-akuity/kargo-demo.git
+            checkout:
+              - branch: team-beta-mobile
+                path: ./src
+        
+        - uses: kustomize-set-image
+          config:
+            path: ./src/stages/test
+            images:
+              - image: postgres
+        
+        - uses: git-commit
+          config:
+            path: ./src
+        
+        - uses: git-push
+          config:
+            path: ./src
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod
+  namespace: team-beta-mobile
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: mobile
+      sources:
+        stages:
+          - test
+  
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/csz-akuity/kargo-demo.git
+            checkout:
+              - branch: team-beta-mobile
+                path: ./src
+        
+        - uses: kustomize-set-image
+          config:
+            path: ./src/stages/prod
+            images:
+              - image: postgres
+        
+        - uses: git-commit
+          config:
+            path: ./src
+        
+        - uses: git-push
+          config:
+            path: ./src
+
