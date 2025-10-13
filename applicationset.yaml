@@ -12,28 +12,18 @@ spec:
   goTemplateOptions: ["missingkey=error"]
   
   generators:
-    # List generator - add team branches here
+    # List generator - add team branches here as they are created
     - list:
-        elements:
-          # Team Alpha - Webapp Project
-          - team: team-alpha
-            branch: team-alpha-webapp
-            project: team-alpha  # HARDCODED
-          
-          # Team Alpha - API Project  
-          - team: team-alpha
-            branch: team-alpha-api
-            project: team-alpha  # HARDCODED
-          
-          # Team Beta - Mobile Project
-          - team: team-beta
-            branch: team-beta-mobile
-            project: team-beta  # HARDCODED
-          
-          # To add new team/project, just add entry here:
-          # - team: team-gamma
-          #   branch: team-gamma-dashboard
-          #   project: team-gamma
+        elements: []
+          # When team creates branch with kargo-manifests/, add it here:
+          #
+          # - team: team-alpha
+          #   branch: team-alpha-webapp
+          #   project: team-alpha
+          #
+          # - team: team-beta
+          #   branch: team-beta-mobile
+          #   project: team-beta
   
   template:
     metadata:
