@@ -54,7 +54,7 @@ spec:
         path: kargo-manifests  # Each branch has kargo-manifests/
       
       destination:
-        server: https://kubernetes.default.svc
+        server: https://cluster-kargo:6445  # Self-hosted Kargo cluster
         namespace: '{{.branch}}'  # One namespace per project
       
       syncPolicy:

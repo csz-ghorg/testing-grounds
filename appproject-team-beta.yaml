@@ -15,7 +15,9 @@ spec:
   
   destinations:
     - namespace: 'team-beta-*'  # Only team-beta namespaces
-      server: '*'
+      server: 'https://cluster-kargo:6445'  # Kargo cluster
+    - namespace: 'team-beta-*'
+      server: 'https://kubernetes.default.svc'  # Also allow default cluster
   
   clusterResourceWhitelist:
     - group: 'kargo.akuity.io'
