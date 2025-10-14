@@ -13,6 +13,18 @@ spec:
         name: team-alpha-webapp
       sources:
         direct: true
+  
+  # Promotion template - how to promote Freight to this stage
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-update
+          config:
+            repoURL: https://github.com/csz-akuity/testing-grounds.git
+            branch: team-alpha-project-webapp
+            kustomize:
+              images:
+                - image: nginx
 
 ---
 # Staging stage - requires manual promotion from dev
@@ -30,6 +42,18 @@ spec:
       sources:
         stages:
           - dev
+  
+  # Promotion template
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-update
+          config:
+            repoURL: https://github.com/csz-akuity/testing-grounds.git
+            branch: team-alpha-project-webapp
+            kustomize:
+              images:
+                - image: nginx
   
   # Simple verification
   verification:
@@ -52,6 +76,18 @@ spec:
       sources:
         stages:
           - staging
+  
+  # Promotion template
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-update
+          config:
+            repoURL: https://github.com/csz-akuity/testing-grounds.git
+            branch: team-alpha-project-webapp
+            kustomize:
+              images:
+                - image: nginx
   
   # Verification before considering promotion successful
   verification:
