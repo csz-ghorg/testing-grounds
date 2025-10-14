@@ -1,0 +1,27 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: team-alpha-webapp-prod
+  namespace: argocd
+  labels:
+    app: team-alpha-webapp
+    stage: prod
+spec:
+  project: team-alpha
+  
+  source:
+    repoURL: https://github.com/csz-akuity/testing-grounds.git
+    targetRevision: team-alpha-project-webapp
+    path: stages/prod
+  
+  destination:
+    server: https://kubernetes.default.svc  # Your application cluster
+    namespace: team-alpha-webapp-prod
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
