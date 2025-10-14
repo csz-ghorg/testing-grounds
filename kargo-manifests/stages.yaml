@@ -1,104 +1,87 @@
 ---
-# Stage: Dev
+# Stages for team-alpha-project-webapp
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: dev
-  namespace: team-alpha-project-webapp
+  namespace: default
 spec:
+  # This stage auto-promotes when new Freight arrives
+  promotionPolicies:
+    - stage: dev
+      autoPromotionEnabled: true
+  # Subscribe to the warehouse for new Freight
   subscriptions:
-    warehouse: webapp
-  
-  promotionTemplate:
-    spec:
-      steps:
-        # Clone the config repo
-        - uses: git-clone
-          config:
-            repoURL: https://github.com/csz-akuity/argocd-example-apps.git
-            branch: main
-            checkout:
-              - branch: main
-                create: true
-                path: ./config
-        
-        # Update image with new version
-        - uses: kustomize-set-image
-          config:
-            path: ./config/guestbook
-            images:
-              - image: public.ecr.aws/nginx/nginx
-        
-        # Commit changes
-        - uses: git-commit
-          config:
-            path: ./config
-            messageFromSteps:
-              - kustomize-set-image
-        
-        # Push to trigger Jenkins pipeline
-        - uses: git-push
-          config:
-            path: ./config
-            targetBranch: team-alpha-webapp-dev
-  
-  # Verification - Wait for deployment to be healthy
-  # This runs in the platform cluster but checks app cluster via kubeconfig
-  verification:
-    analysisTemplates:
-      - name: verify-deployment-health
-    
-    # Runs with workload identity
-    analysisRunMetadata:
-      annotations:
-        iam.gke.io/gcp-service-account: kargo-team-alpha@project-id.iam.gserviceaccount.com
+    warehouses:
+      - name: webapp
+  # Promote to staging stage
+  promotionMechanisms:
+    argoCDAppUpdates:
+      - appName: webapp-dev
+        sourceUpdates:
+          - repoURL: https://github.com/csz-akuity/testing-grounds.git
+            branch: team-alpha-project-webapp
+            kustomize:
+              images:
+                - image: nginx
+                  key: image
+                - image: postgres
+                  key: image
 
 ---
-# Stage: Prod
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: staging
+  namespace: default
+spec:
+  # This stage requires manual promotion
+  promotionPolicies:
+    - stage: staging
+      autoPromotionEnabled: false
+  # Subscribe to dev stage for promotions
+  subscriptions:
+    upstreamStages:
+      - name: dev
+  # Promote to prod stage
+  promotionMechanisms:
+    argoCDAppUpdates:
+      - appName: webapp-staging
+        sourceUpdates:
+          - repoURL: https://github.com/csz-akuity/testing-grounds.git
+            branch: team-alpha-project-webapp
+            kustomize:
+              images:
+                - image: nginx
+                  key: image
+                - image: postgres
+                  key: image
+
+---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: prod
-  namespace: team-alpha-project-webapp
+  namespace: default
 spec:
+  # This stage requires manual promotion
+  promotionPolicies:
+    - stage: prod
+      autoPromotionEnabled: false
+  # Subscribe to staging stage for promotions
   subscriptions:
     upstreamStages:
-      - name: dev
-  
-  promotionTemplate:
-    spec:
-      steps:
-        - uses: git-clone
-          config:
-            repoURL: https://github.com/csz-akuity/argocd-example-apps.git
-            branch: main
-            checkout:
-              - branch: main
-                create: true
-                path: ./config
-        
-        - uses: kustomize-set-image
-          config:
-            path: ./config/guestbook
-            images:
-              - image: public.ecr.aws/nginx/nginx
-        
-        - uses: git-commit
-          config:
-            path: ./config
-            messageFromSteps:
-              - kustomize-set-image
-        
-        - uses: git-push
-          config:
-            path: ./config
-            targetBranch: team-alpha-webapp-prod
-  
-  verification:
-    analysisTemplates:
-      - name: verify-deployment-health
-      - name: verify-rollout-complete
-    
-    analysisRunMetadata:
-      annotations:
-        iam.gke.io/gcp-service-account: kargo-team-alpha@project-id.iam.gserviceaccount.com
+      - name: staging
+  # Deploy to production
+  promotionMechanisms:
+    argoCDAppUpdates:
+      - appName: webapp-prod
+        sourceUpdates:
+          - repoURL: https://github.com/csz-akuity/testing-grounds.git
+            branch: team-alpha-project-webapp
+            kustomize:
+              images:
+                - image: nginx
+                  key: image
+                - image: postgres
+                  key: image
