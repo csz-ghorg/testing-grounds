@@ -8,18 +8,16 @@ metadata:
   namespace: akuity
 spec:
   generators:
-    # List generator - TEST with hardcoded team-alpha only
+    # Simple list generator - TEST with minimal elements
     - list:
         elements:
-          - branch: team-alpha-agent-images
-            team: team-alpha
-            project: team-alpha
+          - test: team-alpha-agent-images
   
   template:
     metadata:
-      name: "team-alpha-agent-images"
+      name: "{{test}}"
       annotations:
-        kargo.akuity.io/authorized-project: "team-alpha-agent-images"
+        kargo.akuity.io/authorized-project: "{{test}}"
         team: "team-alpha"
       labels:
         team: "team-alpha"
@@ -29,12 +27,12 @@ spec:
       
       source:
         repoURL: https://github.com/csz-akuity/testing-grounds.git
-        targetRevision: "team-alpha-agent-images"
+        targetRevision: "{{test}}"
         path: kargo-manifests
       
       destination:
         name: local-k3d
-        namespace: "team-alpha-agent-images"
+        namespace: "{{test}}"
       
       syncPolicy:
         automated:
