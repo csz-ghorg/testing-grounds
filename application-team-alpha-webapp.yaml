@@ -1,0 +1,31 @@
+---
+# Individual Application for Team Alpha Webapp
+# Since ApplicationSet CRD is missing, we'll create individual Applications
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: team-alpha-project-webapp
+  namespace: akuity
+  annotations:
+    kargo.akuity.io/authorized-stage: 'team-alpha:team-alpha-project-webapp'
+    team: 'team-alpha'
+  labels:
+    team: 'team-alpha'
+spec:
+  project: team-alpha
+  
+  source:
+    repoURL: https://github.com/csz-akuity/testing-grounds.git
+    targetRevision: team-alpha-project-webapp
+    path: kargo-manifests
+  
+  destination:
+    name: local-k3d
+    namespace: team-alpha-project-webapp
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

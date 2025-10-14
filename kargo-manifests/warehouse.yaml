@@ -1,0 +1,36 @@
+---
+# Warehouse for Team Beta - Kargo Demo
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: team-beta-warehouse
+  namespace: team-beta-kargo-demo
+spec:
+  freightCreationPolicy: Automatic
+  interval: 5m0s
+  subscriptions:
+    - image:
+        discoveryLimit: 20
+        imageSelectionStrategy: SemVer
+        repoURL: quay.io/akuity/agent
+        strictSemvers: true
+    - image:
+        discoveryLimit: 20
+        imageSelectionStrategy: SemVer
+        repoURL: quay.io/akuity/argocd
+        strictSemvers: true
+    - image:
+        discoveryLimit: 20
+        imageSelectionStrategy: SemVer
+        repoURL: quay.io/argoprojlabs/argocd-image-updater
+        strictSemvers: true
+    - image:
+        discoveryLimit: 20
+        imageSelectionStrategy: SemVer
+        repoURL: quay.io/akuity/redis
+        strictSemvers: true
+    - image:
+        discoveryLimit: 20
+        imageSelectionStrategy: SemVer
+        repoURL: quay.io/akuity/haproxy
+        strictSemvers: true
