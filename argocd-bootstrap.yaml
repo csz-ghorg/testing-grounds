@@ -13,11 +13,11 @@ spec:
     targetRevision: main
     path: .
     directory:
-      include: '{applicationset-git-generator.yaml,appproject-team-*.yaml,applicationset-simple-test.yaml,applicationset-debug.yaml}'
+      include: '{applicationset-*.yaml,appproject-team-*.yaml}'
   
   destination:
     server: https://kubernetes.default.svc
-    namespace: akuity
+    namespace: argocd
   
   syncPolicy:
     automated:

@@ -5,7 +5,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: kargo-team-projects
-  namespace: akuity
+  namespace: argocd
 spec:
   generators:
     # List generator - manually specify team branches

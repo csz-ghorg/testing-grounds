@@ -4,7 +4,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: debug-test
-  namespace: akuity
+  namespace: argocd
 spec:
   generators:
     - list:
@@ -23,4 +23,4 @@ spec:
         path: .
       destination:
         server: https://kubernetes.default.svc
-        namespace: akuity
+        namespace: argocd
