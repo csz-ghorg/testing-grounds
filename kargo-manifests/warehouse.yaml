@@ -11,27 +11,27 @@ spec:
   interval: 5m0s
   subscriptions:
     - image:
-        discoveryLimit: 20
+        discoveryLimit: 5
         imageSelectionStrategy: SemVer
         repoURL: quay.io/akuity/agent
         strictSemvers: true
     - image:
-        discoveryLimit: 20
+        discoveryLimit: 5
         imageSelectionStrategy: SemVer
         repoURL: quay.io/akuity/argocd
         strictSemvers: true
     - image:
-        discoveryLimit: 20
+        discoveryLimit: 5
         imageSelectionStrategy: SemVer
         repoURL: quay.io/argoprojlabs/argocd-image-updater
         strictSemvers: true
     - image:
-        discoveryLimit: 20
+        discoveryLimit: 5
         imageSelectionStrategy: SemVer
         repoURL: quay.io/akuity/redis
         strictSemvers: true
     - image:
-        discoveryLimit: 20
+        discoveryLimit: 5
         imageSelectionStrategy: SemVer
         repoURL: quay.io/akuity/haproxy
         strictSemvers: true
