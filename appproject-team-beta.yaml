@@ -4,7 +4,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
   name: team-beta
-  namespace: akuity
+  namespace: argocd
 spec:
   description: Team Beta - can only see their own Kargo projects
   
