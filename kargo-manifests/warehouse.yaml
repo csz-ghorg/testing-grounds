@@ -11,14 +11,14 @@ spec:
   subscriptions:
     # Watch container images - using public nginx for testing
     - image:
-        repoURL: nginx
+        repoURL: docker.io/library/nginx
         semverConstraint: ^1.26.0
         strictSemvers: true
         discoveryLimit: 5
         
     # Watch container images - using public postgres for testing  
     - image:
-        repoURL: postgres
+        repoURL: docker.io/library/postgres
         semverConstraint: ^15.0.0
         strictSemvers: true
         discoveryLimit: 5
