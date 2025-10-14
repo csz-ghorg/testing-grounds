@@ -1,87 +1,65 @@
 ---
-# Stages for team-alpha-project-webapp
+# Dev stage - auto-promotes from warehouse
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: dev
   namespace: default
 spec:
-  # This stage auto-promotes when new Freight arrives
-  promotionPolicies:
-    - stage: dev
-      autoPromotionEnabled: true
-  # Subscribe to the warehouse for new Freight
   subscriptions:
     warehouses:
       - name: team-alpha-webapp
-  # Promote to staging stage
   promotionMechanisms:
-    argoCDAppUpdates:
-      - appName: team-alpha-webapp-dev
-        sourceUpdates:
-          - repoURL: https://github.com/csz-akuity/testing-grounds.git
-            branch: team-alpha-project-webapp
-            kustomize:
-              images:
-                - image: nginx
-                  key: image
-                - image: postgres
-                  key: image
+    - gitUpdates:
+        - repoURL: https://github.com/csz-akuity/testing-grounds.git
+          branch: team-alpha-project-webapp
+          kustomize:
+            images:
+              - image: nginx
+              - image: postgres
 
 ---
+# Staging stage - requires manual promotion
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: staging
   namespace: default
 spec:
-  # This stage requires manual promotion
-  promotionPolicies:
-    - stage: staging
-      autoPromotionEnabled: false
-  # Subscribe to dev stage for promotions
   subscriptions:
     upstreamStages:
       - name: dev
-  # Promote to prod stage
   promotionMechanisms:
-    argoCDAppUpdates:
-      - appName: team-alpha-webapp-staging
-        sourceUpdates:
-          - repoURL: https://github.com/csz-akuity/testing-grounds.git
-            branch: team-alpha-project-webapp
-            kustomize:
-              images:
-                - image: nginx
-                  key: image
-                - image: postgres
-                  key: image
+    - gitUpdates:
+        - repoURL: https://github.com/csz-akuity/testing-grounds.git
+          branch: team-alpha-project-webapp
+          kustomize:
+            images:
+              - image: nginx
+              - image: postgres
+  verification:
+    analysisTemplates:
+      - name: verify-deployment-health
 
 ---
+# Production stage - requires manual promotion with verification
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: prod
   namespace: default
 spec:
-  # This stage requires manual promotion
-  promotionPolicies:
-    - stage: prod
-      autoPromotionEnabled: false
-  # Subscribe to staging stage for promotions
   subscriptions:
     upstreamStages:
       - name: staging
-  # Deploy to production
   promotionMechanisms:
-    argoCDAppUpdates:
-      - appName: team-alpha-webapp-prod
-        sourceUpdates:
-          - repoURL: https://github.com/csz-akuity/testing-grounds.git
-            branch: team-alpha-project-webapp
-            kustomize:
-              images:
-                - image: nginx
-                  key: image
-                - image: postgres
-                  key: image
+    - gitUpdates:
+        - repoURL: https://github.com/csz-akuity/testing-grounds.git
+          branch: team-alpha-project-webapp
+          kustomize:
+            images:
+              - image: nginx
+              - image: postgres
+  verification:
+    analysisTemplates:
+      - name: verify-deployment-health
