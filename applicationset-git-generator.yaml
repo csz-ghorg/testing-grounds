@@ -8,36 +8,33 @@ metadata:
   namespace: akuity
 spec:
   generators:
-    # List generator - manually specify team branches
+    # List generator - TEST with hardcoded team-alpha only
     - list:
         elements:
           - branch: team-alpha-agent-images
             team: team-alpha
-            project: team-alpha  # HARDCODED
-          - branch: team-beta-kargo-demo
-            team: team-beta
-            project: team-beta  # HARDCODED
+            project: team-alpha
   
   template:
     metadata:
-      name: "{{branch}}"
+      name: "team-alpha-agent-images"
       annotations:
-        kargo.akuity.io/authorized-project: "{{branch}}"
-        team: "{{team}}"
+        kargo.akuity.io/authorized-project: "team-alpha-agent-images"
+        team: "team-alpha"
       labels:
-        team: "{{team}}"
+        team: "team-alpha"
     
     spec:
-      project: "{{project}}"
+      project: "team-alpha"
       
       source:
         repoURL: https://github.com/csz-akuity/testing-grounds.git
-        targetRevision: "{{branch}}"
+        targetRevision: "team-alpha-agent-images"
         path: kargo-manifests
       
       destination:
         name: local-k3d
-        namespace: "{{branch}}"
+        namespace: "team-alpha-agent-images"
       
       syncPolicy:
         automated:
