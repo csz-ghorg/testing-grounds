@@ -11,43 +11,37 @@ spec:
   goTemplateOptions: ["missingkey=error"]
   
   generators:
-    # Git Generator - discovers branches matching pattern
-    - git:
-        repoURL: https://github.com/csz-akuity/testing-grounds.git
-        revision: HEAD
-        directories:
-          # Discover all branches that start with team- and contain kargo-manifests
-          - path: "team-*"
+    # List generator - manually specify team branches
+    - list:
+        elements:
+          - branch: team-alpha-agent-images
+            team: team-alpha
+            project: team-alpha  # HARDCODED
+          - branch: team-beta-kargo-demo
+            team: team-beta
+            project: team-beta  # HARDCODED
   
   template:
     metadata:
-      name: '{{.path.basename}}'
+      name: '{{.branch}}'
       annotations:
         # Kargo authorization - links Application to Kargo Project
-        kargo.akuity.io/authorized-project: '{{.path.basename}}'
-        team: '{{.path.basename}}'
+        kargo.akuity.io/authorized-project: '{{.branch}}'
+        team: '{{.team}}'
       labels:
-        team: '{{.path.basename}}'
+        team: '{{.team}}'
     
     spec:
-      # HARDCODED project based on branch name pattern
-      project: >-
-        {{- if hasPrefix "team-alpha" .path.basename -}}
-        team-alpha
-        {{- else if hasPrefix "team-beta" .path.basename -}}
-        team-beta
-        {{- else -}}
-        default
-        {{- end }}
+      project: '{{.project}}'  # From list element (hardcoded)
       
       source:
         repoURL: https://github.com/csz-akuity/testing-grounds.git
-        targetRevision: '{{.path.basename}}'
+        targetRevision: '{{.branch}}'
         path: kargo-manifests
       
       destination:
         name: local-k3d
-        namespace: '{{.path.basename}}'
+        namespace: '{{.branch}}'
       
       syncPolicy:
         automated:
