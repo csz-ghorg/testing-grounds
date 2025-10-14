@@ -1,63 +1,29 @@
 ---
-# Warehouse with GCP Secret Manager integration
+# Warehouse for team-alpha-project-webapp
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
   name: webapp
-  namespace: team-alpha-project-webapp
+  namespace: default
 spec:
   interval: 5m
   
   subscriptions:
     # Watch container images - using public nginx for testing
     - image:
-        repoURL: public.ecr.aws/nginx/nginx
+        repoURL: nginx
         semverConstraint: ^1.26.0
+        strictSemvers: true
+        discoveryLimit: 5
+        
+    # Watch container images - using public postgres for testing  
+    - image:
+        repoURL: postgres
+        semverConstraint: ^15.0.0
         strictSemvers: true
         discoveryLimit: 5
         
     # Watch Git repo for config changes
     - git:
-        repoURL: https://github.com/csz-akuity/argocd-example-apps.git
-        branch: main
----
-# Secret from GCP Secret Manager (auto-synced via External Secrets Operator)
-apiVersion: external-secrets.io/v1beta1
-kind: ExternalSecret
-metadata:
-  name: webapp-secrets
-  namespace: team-alpha-project-webapp
-spec:
-  refreshInterval: 1h
-  secretStoreRef:
-    name: gcpsm-secret-store
-    kind: ClusterSecretStore
-  
-  target:
-    name: webapp-repo-creds
-    creationPolicy: Owner
-  
-  data:
-    - secretKey: username
-      remoteRef:
-        key: team-alpha-webapp-git-username
-    - secretKey: password
-      remoteRef:
-        key: team-alpha-webapp-git-token
----
-# GCP Secret Store (one per namespace with workload identity)
-apiVersion: external-secrets.io/v1beta1
-kind: SecretStore
-metadata:
-  name: gcpsm-secret-store
-  namespace: team-alpha-project-webapp
-spec:
-  provider:
-    gcpsm:
-      projectID: "project-id"
-      auth:
-        workloadIdentity:
-          clusterLocation: us-central1
-          clusterName: platform-cluster
-          serviceAccountRef:
-            name: kargo-agent
+        repoURL: https://github.com/csz-akuity/testing-grounds.git
+        branch: team-alpha-project-webapp
