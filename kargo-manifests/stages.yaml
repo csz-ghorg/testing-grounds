@@ -31,10 +31,14 @@ spec:
             images:
               - image: nginx
                 tag: ${{ imageFrom('nginx').Tag }}
+        - uses: kustomize-build
+          config:
+            path: ./src/stages/dev
+            outPath: ./src/build
         - uses: git-commit
           config:
             path: ./src
-            message: ${{ task.outputs['update-image'].commitMessage }}
+            message: "Update nginx image for dev stage"
         - uses: git-push
           config:
             path: ./src
@@ -77,7 +81,7 @@ spec:
         - uses: git-commit
           config:
             path: ./src
-            message: ${{ task.outputs['update-image'].commitMessage }}
+            message: "Update nginx image for dev stage"
         - uses: git-push
           config:
             path: ./src
@@ -125,7 +129,7 @@ spec:
         - uses: git-commit
           config:
             path: ./src
-            message: ${{ task.outputs['update-image'].commitMessage }}
+            message: "Update nginx image for dev stage"
         - uses: git-push
           config:
             path: ./src
