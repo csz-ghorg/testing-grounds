@@ -16,15 +16,27 @@ spec:
   
   # Promotion template - how to promote Freight to this stage
   promotionTemplate:
-    spec:
-      steps:
-        - uses: git-update
-          config:
-            repoURL: https://github.com/csz-akuity/testing-grounds.git
-            branch: team-alpha-project-webapp
-            kustomize:
-              images:
-                - image: nginx
+    steps:
+      - uses: git-clone
+        config:
+          repoURL: https://github.com/csz-akuity/testing-grounds.git
+          checkout:
+            - branch: team-alpha-project-webapp
+              path: ./src
+      - uses: kustomize-set-image
+        config:
+          path: ./src
+          images:
+            - image: nginx
+      - uses: git-commit
+        config:
+          path: ./src
+          messageFromSteps:
+            - kustomize-set-image
+      - uses: git-push
+        config:
+          path: ./src
+          branch: team-alpha-project-webapp
 
 ---
 # Staging stage - requires manual promotion from dev
@@ -47,13 +59,26 @@ spec:
   promotionTemplate:
     spec:
       steps:
-        - uses: git-update
+        - uses: git-clone
           config:
             repoURL: https://github.com/csz-akuity/testing-grounds.git
+            checkout:
+              - branch: team-alpha-project-webapp
+                path: ./src
+        - uses: kustomize-set-image
+          config:
+            path: ./src
+            images:
+              - image: nginx
+        - uses: git-commit
+          config:
+            path: ./src
+            messageFromSteps:
+              - kustomize-set-image
+        - uses: git-push
+          config:
+            path: ./src
             branch: team-alpha-project-webapp
-            kustomize:
-              images:
-                - image: nginx
   
   # Simple verification
   verification:
@@ -81,13 +106,26 @@ spec:
   promotionTemplate:
     spec:
       steps:
-        - uses: git-update
+        - uses: git-clone
           config:
             repoURL: https://github.com/csz-akuity/testing-grounds.git
+            checkout:
+              - branch: team-alpha-project-webapp
+                path: ./src
+        - uses: kustomize-set-image
+          config:
+            path: ./src
+            images:
+              - image: nginx
+        - uses: git-commit
+          config:
+            path: ./src
+            messageFromSteps:
+              - kustomize-set-image
+        - uses: git-push
+          config:
+            path: ./src
             branch: team-alpha-project-webapp
-            kustomize:
-              images:
-                - image: nginx
   
   # Verification before considering promotion successful
   verification:
