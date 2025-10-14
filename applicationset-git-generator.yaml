@@ -31,7 +31,7 @@ spec:
         path: kargo-manifests
       
       destination:
-        name: local-k3d
+        server: https://cluster-kargo:6445
         namespace: "{{test}}"
       
       syncPolicy:
