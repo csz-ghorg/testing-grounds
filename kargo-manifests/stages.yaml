@@ -42,7 +42,6 @@ spec:
         - uses: git-push
           config:
             path: ./src
-            branch: team-alpha-project-webapp
 
 ---
 # Staging stage - requires manual promotion from dev
@@ -85,7 +84,6 @@ spec:
         - uses: git-push
           config:
             path: ./src
-            branch: team-alpha-project-webapp
   
   # Simple verification
   verification:
@@ -133,7 +131,6 @@ spec:
         - uses: git-push
           config:
             path: ./src
-            branch: team-alpha-project-webapp
   
   # Verification before considering promotion successful
   verification:
