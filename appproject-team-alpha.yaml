@@ -13,8 +13,10 @@ spec:
     - '*'  # Allow other repos for Kargo promotions
   
   destinations:
-    - namespace: 'team-alpha-*'  # Only team-alpha namespaces
+    - namespace: '*'  # Allow all namespaces for testing
       name: local-k3d
+    - namespace: 'akuity'  # Allow akuity namespace
+      server: https://kubernetes.default.svc
   
   clusterResourceWhitelist:
     - group: 'kargo.akuity.io'
