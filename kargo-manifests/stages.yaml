@@ -26,7 +26,7 @@ spec:
                 path: ./src
         - uses: kustomize-set-image
           config:
-            path: ./src
+            path: ./src/base
             images:
               - image: nginx
                 tag: ${{ imageFrom('nginx').Tag }}
@@ -69,7 +69,7 @@ spec:
                 path: ./src
         - uses: kustomize-set-image
           config:
-            path: ./src
+            path: ./src/base
             images:
               - image: nginx
                 tag: ${{ imageFrom('nginx').Tag }}
@@ -117,7 +117,7 @@ spec:
                 path: ./src
         - uses: kustomize-set-image
           config:
-            path: ./src
+            path: ./src/base
             images:
               - image: nginx
                 tag: ${{ imageFrom('nginx').Tag }}
