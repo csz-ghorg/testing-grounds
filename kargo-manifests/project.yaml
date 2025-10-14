@@ -8,8 +8,8 @@ metadata:
   namespace: team-alpha-webapp
 spec:
   promotionPolicies:
-    - stage: dev
-      autoPromotionEnabled: true
-    - stage: prod
-      autoPromotionEnabled: false
+    - autoPromotionEnabled: true
+      stage: dev
+    - autoPromotionEnabled: false
+      stage: prod
 

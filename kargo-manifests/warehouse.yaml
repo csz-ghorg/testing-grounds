@@ -6,7 +6,7 @@ metadata:
   name: team-alpha-webapp
   namespace: team-alpha-webapp
 spec:
-  interval: 5m
+  interval: 5m0s
   
   subscriptions:
     # Watch container images - using public nginx for testing
