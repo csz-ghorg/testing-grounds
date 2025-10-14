@@ -9,10 +9,9 @@ spec:
   interval: 5m0s
   
   subscriptions:
-    # Watch container images - using public nginx for testing
     - image:
-        repoURL: nginx
-        semverConstraint: ^1.26
+        repoURL: public.ecr.aws/nginx/nginx
+        semverConstraint: ^1.24
         discoveryLimit: 5
         
     # Watch Git repo for config changes

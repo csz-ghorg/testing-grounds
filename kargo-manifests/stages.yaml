@@ -29,8 +29,8 @@ spec:
           config:
             path: ./src/base
             images:
-              - image: nginx
-                tag: ${{ imageFrom('nginx').Tag }}
+              - image: public.ecr.aws/nginx/nginx
+                tag: ${{ imageFrom('public.ecr.aws/nginx/nginx').Tag }}
         - uses: kustomize-build
           config:
             path: ./src/stages/dev
@@ -75,8 +75,8 @@ spec:
           config:
             path: ./src/base
             images:
-              - image: nginx
-                tag: ${{ imageFrom('nginx').Tag }}
+              - image: public.ecr.aws/nginx/nginx
+                tag: ${{ imageFrom('public.ecr.aws/nginx/nginx').Tag }}
         - uses: git-commit
           config:
             path: ./src
@@ -122,8 +122,8 @@ spec:
           config:
             path: ./src/base
             images:
-              - image: nginx
-                tag: ${{ imageFrom('nginx').Tag }}
+              - image: public.ecr.aws/nginx/nginx
+                tag: ${{ imageFrom('public.ecr.aws/nginx/nginx').Tag }}
         - uses: git-commit
           config:
             path: ./src
