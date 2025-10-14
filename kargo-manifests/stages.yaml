@@ -16,27 +16,28 @@ spec:
   
   # Promotion template - how to promote Freight to this stage
   promotionTemplate:
-    steps:
-      - uses: git-clone
-        config:
-          repoURL: https://github.com/csz-akuity/testing-grounds.git
-          checkout:
-            - branch: team-alpha-project-webapp
-              path: ./src
-      - uses: kustomize-set-image
-        config:
-          path: ./src
-          images:
-            - image: nginx
-      - uses: git-commit
-        config:
-          path: ./src
-          messageFromSteps:
-            - kustomize-set-image
-      - uses: git-push
-        config:
-          path: ./src
-          branch: team-alpha-project-webapp
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/csz-akuity/testing-grounds.git
+            checkout:
+              - branch: team-alpha-project-webapp
+                path: ./src
+        - uses: kustomize-set-image
+          config:
+            path: ./src
+            images:
+              - image: nginx
+        - uses: git-commit
+          config:
+            path: ./src
+            messageFromSteps:
+              - kustomize-set-image
+        - uses: git-push
+          config:
+            path: ./src
+            branch: team-alpha-project-webapp
 
 ---
 # Staging stage - requires manual promotion from dev
