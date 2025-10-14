@@ -1,0 +1,10 @@
+---
+# Kargo Project for Team Alpha - Agent Images
+# Based on working kargo.yaml example
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Project
+metadata:
+  name: team-alpha-agent-images
+  namespace: team-alpha-agent-images
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
