@@ -44,7 +44,7 @@ spec:
         path: kargo-manifests  # Each branch has kargo-manifests/
       
       destination:
-        name: kargo  # Self-hosted Kargo cluster name (as registered in Akuity)
+        name: local-k3d
         namespace: '{{.branch}}'  # One namespace per project
       
       syncPolicy:
