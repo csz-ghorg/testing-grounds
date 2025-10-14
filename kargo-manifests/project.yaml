@@ -5,7 +5,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Project
 metadata:
   name: webapp
-  namespace: kargo-team-alpha-team-alpha-project-webapp
+  namespace: team-alpha-project-webapp
 spec:
   promotionPolicies:
     - stage: dev

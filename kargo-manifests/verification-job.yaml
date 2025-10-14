@@ -5,7 +5,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
   name: verify-deployment-health
-  namespace: kargo-team-alpha-team-alpha-project-webapp
+  namespace: team-alpha-project-webapp
 spec:
   metrics:
     - name: check-pods-running
@@ -64,7 +64,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
   name: verify-rollout-complete
-  namespace: kargo-team-alpha-team-alpha-project-webapp
+  namespace: team-alpha-project-webapp
 spec:
   metrics:
     - name: check-rollout

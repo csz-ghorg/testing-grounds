@@ -4,7 +4,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: dev
-  namespace: kargo-team-alpha-team-alpha-project-webapp
+  namespace: team-alpha-project-webapp
 spec:
   subscriptions:
     warehouse: webapp
@@ -59,7 +59,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: prod
-  namespace: kargo-team-alpha-team-alpha-project-webapp
+  namespace: team-alpha-project-webapp
 spec:
   subscriptions:
     upstreamStages:
