@@ -1,6 +1,5 @@
 ---
-# AppProject for Team Alpha
-# Controls what Team Alpha can see and do
+# AppProject for Team Alpha - Controls what they can see and do
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
@@ -15,7 +14,7 @@ spec:
   
   destinations:
     - namespace: 'team-alpha-*'  # Only team-alpha namespaces
-      name: kargo  # Kargo cluster
+      name: local-k3d
   
   clusterResourceWhitelist:
     - group: 'kargo.akuity.io'
@@ -32,6 +31,7 @@ spec:
       policies:
         - p, proj:team-alpha:admin, applications, *, team-alpha/*, allow
         - p, proj:team-alpha:admin, logs, get, team-alpha/*, allow
+        - p, proj:team-alpha:admin, exec, get, team-alpha/*, allow
       groups:
         - team-alpha-admins  # SSO group
         - myorg:team-alpha   # GitHub team
@@ -45,4 +45,3 @@ spec:
       groups:
         - team-alpha-developers
         - myorg:team-alpha-dev
-

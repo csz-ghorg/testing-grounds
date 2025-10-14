@@ -1,10 +1,10 @@
 ---
-# Bootstrap Application - syncs platform resources 
+# Bootstrap Application - Creates ApplicationSet and AppProjects
 # Apply this once, then everything else is GitOps
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kargo-platform
+  name: kargo-multi-tenant-platform
 spec:
   project: default
   
@@ -13,13 +13,16 @@ spec:
     targetRevision: main
     path: .
     directory:
-      include: 'applicationset.yaml'
+      include: 'applicationset-git-generator.yaml'
+      include: 'appproject-team-*.yaml'
   
   destination:
     server: https://kubernetes.default.svc
     namespace: akuity
   
   syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
-

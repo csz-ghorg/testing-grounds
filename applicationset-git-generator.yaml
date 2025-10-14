@@ -1,0 +1,57 @@
+---
+# ApplicationSet using Git Generator to discover team branches
+# Based on Argo CD Git Generator documentation
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: kargo-team-projects
+  namespace: akuity
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  
+  generators:
+    # Git Generator - discovers branches matching pattern
+    - git:
+        repoURL: https://github.com/csz-akuity/testing-grounds.git
+        revision: HEAD
+        directories:
+          # Discover all branches that start with team- and contain kargo-manifests
+          - path: "team-*"
+  
+  template:
+    metadata:
+      name: '{{.path.basename}}'
+      annotations:
+        # Kargo authorization - links Application to Kargo Project
+        kargo.akuity.io/authorized-project: '{{.path.basename}}'
+        team: '{{.path.basename}}'
+      labels:
+        team: '{{.path.basename}}'
+    
+    spec:
+      # HARDCODED project based on branch name pattern
+      project: >-
+        {{- if hasPrefix "team-alpha" .path.basename -}}
+        team-alpha
+        {{- else if hasPrefix "team-beta" .path.basename -}}
+        team-beta
+        {{- else -}}
+        default
+        {{- end }}
+      
+      source:
+        repoURL: https://github.com/csz-akuity/testing-grounds.git
+        targetRevision: '{{.path.basename}}'
+        path: kargo-manifests
+      
+      destination:
+        name: local-k3d
+        namespace: '{{.path.basename}}'
+      
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
