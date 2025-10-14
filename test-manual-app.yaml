@@ -6,7 +6,7 @@ metadata:
   name: test-manual-app
   namespace: akuity
 spec:
-  project: team-alpha
+  project: team-alpha-minimal
   
   source:
     repoURL: https://github.com/csz-akuity/testing-grounds.git
