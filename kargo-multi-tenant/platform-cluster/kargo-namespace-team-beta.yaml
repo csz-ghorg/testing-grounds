@@ -1,9 +1,0 @@
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: kargo-team-beta
-  annotations:
-    # For GCP Workload Identity (if using)
-    iam.gke.io/gcp-service-account: kargo-team-beta@project-id.iam.gserviceaccount.com
-
