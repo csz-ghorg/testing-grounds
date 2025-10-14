@@ -1,0 +1,33 @@
+---
+# Ultra-simple ApplicationSet test - just one hardcoded application
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: simple-test
+  namespace: akuity
+spec:
+  generators:
+    - list:
+        elements:
+          - name: simple-app
+  
+  template:
+    metadata:
+      name: "{{name}}"
+    
+    spec:
+      project: default
+      
+      source:
+        repoURL: https://github.com/csz-akuity/testing-grounds.git
+        targetRevision: team-alpha-agent-images
+        path: kargo-manifests
+      
+      destination:
+        server: https://cluster-kargo:6445
+        namespace: default
+      
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
