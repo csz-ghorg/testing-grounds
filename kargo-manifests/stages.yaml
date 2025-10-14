@@ -29,6 +29,7 @@ spec:
             path: ./src
             images:
               - image: nginx
+                tag: ${{ imageFrom('nginx').Tag }}
         - uses: git-commit
           config:
             path: ./src
@@ -71,6 +72,7 @@ spec:
             path: ./src
             images:
               - image: nginx
+                tag: ${{ imageFrom('nginx').Tag }}
         - uses: git-commit
           config:
             path: ./src
@@ -118,6 +120,7 @@ spec:
             path: ./src
             images:
               - image: nginx
+                tag: ${{ imageFrom('nginx').Tag }}
         - uses: git-commit
           config:
             path: ./src
