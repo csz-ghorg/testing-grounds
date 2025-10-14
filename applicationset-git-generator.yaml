@@ -32,11 +32,9 @@ spec:
       
       destination:
         server: https://cluster-kargo:6445
-        namespace: "{{test}}"
+        namespace: default
       
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
