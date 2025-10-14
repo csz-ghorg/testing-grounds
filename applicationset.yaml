@@ -17,18 +17,8 @@ spec:
         elements:
           # Team Alpha - Webapp Project
           - team: team-alpha
-            branch: team-alpha-webapp
+            branch: team-alpha-project-webapp
             project: team-alpha  # HARDCODED
-          
-          # Team Alpha - API Project  
-          - team: team-alpha
-            branch: team-alpha-api
-            project: team-alpha  # HARDCODED
-          
-          # Team Beta - Mobile Project
-          - team: team-beta
-            branch: team-beta-mobile
-            project: team-beta  # HARDCODED
           
           # To add new team/project, just add entry here:
           # - team: team-gamma

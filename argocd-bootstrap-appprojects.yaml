@@ -1,10 +1,9 @@
 ---
-# Bootstrap Application - syncs platform resources 
-# Apply this once, then everything else is GitOps
+# Bootstrap Application for AppProjects
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kargo-platform
+  name: kargo-appprojects
 spec:
   project: default
   
@@ -13,7 +12,7 @@ spec:
     targetRevision: main
     path: .
     directory:
-      include: 'applicationset.yaml'
+      include: 'appproject-*.yaml'
   
   destination:
     server: https://kubernetes.default.svc
@@ -22,4 +21,3 @@ spec:
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
-
