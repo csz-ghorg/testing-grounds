@@ -13,7 +13,7 @@ spec:
     targetRevision: main
     path: .
     directory:
-      include: '{applicationset-git-generator.yaml,appproject-team-*.yaml}'
+      include: '{applicationset-git-generator.yaml,appproject-team-*.yaml,test-manual-app.yaml}'
   
   destination:
     server: https://kubernetes.default.svc

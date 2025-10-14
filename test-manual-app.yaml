@@ -1,0 +1,25 @@
+---
+# Manual test Application to verify basic setup works
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-manual-app
+  namespace: akuity
+spec:
+  project: team-alpha
+  
+  source:
+    repoURL: https://github.com/csz-akuity/testing-grounds.git
+    targetRevision: team-alpha-agent-images
+    path: kargo-manifests
+  
+  destination:
+    name: local-k3d
+    namespace: test-manual-namespace
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
