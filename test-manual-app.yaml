@@ -15,7 +15,7 @@ spec:
   
   destination:
     name: local-k3d
-    namespace: test-manual-namespace
+    namespace: team-alpha-test-manual
   
   syncPolicy:
     automated:
