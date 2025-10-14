@@ -1,0 +1,87 @@
+---
+# Stages for team-beta-kargo-demo
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: dev
+  namespace: default
+spec:
+  # This stage auto-promotes when new Freight arrives
+  promotionPolicies:
+    - stage: dev
+      autoPromotionEnabled: true
+  # Subscribe to the warehouse for new Freight
+  subscriptions:
+    warehouses:
+      - name: kargo-demo
+  # Promote to staging stage
+  promotionMechanisms:
+    argoCDAppUpdates:
+      - appName: kargo-demo-dev
+        sourceUpdates:
+          - repoURL: https://github.com/csz-akuity/testing-grounds.git
+            branch: team-beta-kargo-demo
+            kustomize:
+              images:
+                - image: nginx
+                  key: image
+                - image: redis
+                  key: image
+
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: staging
+  namespace: default
+spec:
+  # This stage requires manual promotion
+  promotionPolicies:
+    - stage: staging
+      autoPromotionEnabled: false
+  # Subscribe to dev stage for promotions
+  subscriptions:
+    upstreamStages:
+      - name: dev
+  # Promote to prod stage
+  promotionMechanisms:
+    argoCDAppUpdates:
+      - appName: kargo-demo-staging
+        sourceUpdates:
+          - repoURL: https://github.com/csz-akuity/testing-grounds.git
+            branch: team-beta-kargo-demo
+            kustomize:
+              images:
+                - image: nginx
+                  key: image
+                - image: redis
+                  key: image
+
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod
+  namespace: default
+spec:
+  # This stage requires manual promotion
+  promotionPolicies:
+    - stage: prod
+      autoPromotionEnabled: false
+  # Subscribe to staging stage for promotions
+  subscriptions:
+    upstreamStages:
+      - name: staging
+  # Deploy to production
+  promotionMechanisms:
+    argoCDAppUpdates:
+      - appName: kargo-demo-prod
+        sourceUpdates:
+          - repoURL: https://github.com/csz-akuity/testing-grounds.git
+            branch: team-beta-kargo-demo
+            kustomize:
+              images:
+                - image: nginx
+                  key: image
+                - image: redis
+                  key: image
