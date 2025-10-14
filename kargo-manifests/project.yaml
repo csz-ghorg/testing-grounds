@@ -4,7 +4,7 @@
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Project
 metadata:
-  name: webapp
+  name: team-alpha-webapp
   namespace: default
 spec:
   promotionPolicies:

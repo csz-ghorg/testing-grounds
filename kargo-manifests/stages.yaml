@@ -13,11 +13,11 @@ spec:
   # Subscribe to the warehouse for new Freight
   subscriptions:
     warehouses:
-      - name: webapp
+      - name: team-alpha-webapp
   # Promote to staging stage
   promotionMechanisms:
     argoCDAppUpdates:
-      - appName: webapp-dev
+      - appName: team-alpha-webapp-dev
         sourceUpdates:
           - repoURL: https://github.com/csz-akuity/testing-grounds.git
             branch: team-alpha-project-webapp
@@ -46,7 +46,7 @@ spec:
   # Promote to prod stage
   promotionMechanisms:
     argoCDAppUpdates:
-      - appName: webapp-staging
+      - appName: team-alpha-webapp-staging
         sourceUpdates:
           - repoURL: https://github.com/csz-akuity/testing-grounds.git
             branch: team-alpha-project-webapp
@@ -75,7 +75,7 @@ spec:
   # Deploy to production
   promotionMechanisms:
     argoCDAppUpdates:
-      - appName: webapp-prod
+      - appName: team-alpha-webapp-prod
         sourceUpdates:
           - repoURL: https://github.com/csz-akuity/testing-grounds.git
             branch: team-alpha-project-webapp
