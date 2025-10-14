@@ -1,0 +1,26 @@
+---
+# Debug ApplicationSet - minimal configuration to test controller
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: debug-test
+  namespace: akuity
+spec:
+  generators:
+    - list:
+        elements:
+          - test: debug-app
+  template:
+    metadata:
+      name: "{{test}}"
+      annotations:
+        debug: "true"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/csz-akuity/testing-grounds.git
+        targetRevision: main
+        path: .
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: akuity

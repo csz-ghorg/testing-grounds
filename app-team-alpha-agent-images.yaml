@@ -1,0 +1,23 @@
+---
+# Individual Application for team-alpha-agent-images
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: team-alpha-agent-images
+  namespace: akuity
+spec:
+  project: team-alpha
+  
+  source:
+    repoURL: https://github.com/csz-akuity/testing-grounds.git
+    targetRevision: team-alpha-agent-images
+    path: kargo-manifests
+  
+  destination:
+    server: https://cluster-kargo:6445
+    namespace: default
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
