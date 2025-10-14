@@ -15,12 +15,6 @@ spec:
         semverConstraint: ^1.26
         discoveryLimit: 5
         
-    # Watch container images - using public postgres for testing  
-    - image:
-        repoURL: postgres
-        semverConstraint: ^15
-        discoveryLimit: 5
-        
     # Watch Git repo for config changes
     - git:
         repoURL: https://github.com/csz-akuity/testing-grounds.git
