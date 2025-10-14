@@ -4,7 +4,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
   name: team-alpha-webapp
-  namespace: default
+  namespace: team-alpha-webapp
 spec:
   interval: 5m
   

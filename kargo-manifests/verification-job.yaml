@@ -5,7 +5,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
   name: verify-deployment-health
-  namespace: default
+  namespace: team-alpha-webapp
 spec:
   metrics:
     - name: check-deployment-ready

@@ -4,7 +4,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: dev
-  namespace: default
+  namespace: team-alpha-webapp
 spec:
   # Request Freight directly from the warehouse
   requestedFreight:
@@ -16,34 +16,33 @@ spec:
   
   # Promotion template - how to promote Freight to this stage
   promotionTemplate:
-    spec:
-      steps:
-        # Clone the Git repo
-        - uses: git-clone
-          config:
-            repoURL: https://github.com/csz-akuity/testing-grounds.git
-            checkout:
-              - branch: team-alpha-project-webapp
-                path: ./src
-        
-        # Update image references with Kustomize
-        - uses: kustomize-set-image
-          config:
-            path: ./src
-            images:
-              - image: nginx
-              - image: postgres
-        
-        # Commit and push changes
-        - uses: git-commit
-          config:
-            path: ./src
-            messageFromSteps:
-              - kustomize-set-image
-        - uses: git-push
-          config:
-            path: ./src
-            branch: team-alpha-project-webapp
+    steps:
+      # Clone the Git repo
+      - uses: git-clone
+        config:
+          repoURL: https://github.com/csz-akuity/testing-grounds.git
+          checkout:
+            - branch: team-alpha-project-webapp
+              path: ./src
+      
+      # Update image references with Kustomize
+      - uses: kustomize-set-image
+        config:
+          path: ./src
+          images:
+            - image: nginx
+            - image: postgres
+      
+      # Commit and push changes
+      - uses: git-commit
+        config:
+          path: ./src
+          messageFromSteps:
+            - kustomize-set-image
+      - uses: git-push
+        config:
+          path: ./src
+          branch: team-alpha-project-webapp
 
 ---
 # Staging stage - requires manual promotion from dev
@@ -51,7 +50,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: staging
-  namespace: default
+  namespace: team-alpha-webapp
 spec:
   # Request Freight from dev stage
   requestedFreight:
@@ -64,31 +63,30 @@ spec:
   
   # Promotion template
   promotionTemplate:
-    spec:
-      steps:
-        - uses: git-clone
-          config:
-            repoURL: https://github.com/csz-akuity/testing-grounds.git
-            checkout:
-              - branch: team-alpha-project-webapp
-                path: ./src
-        
-        - uses: kustomize-set-image
-          config:
-            path: ./src
-            images:
-              - image: nginx
-              - image: postgres
-        
-        - uses: git-commit
-          config:
-            path: ./src
-            messageFromSteps:
-              - kustomize-set-image
-        - uses: git-push
-          config:
-            path: ./src
-            branch: team-alpha-project-webapp
+    steps:
+      - uses: git-clone
+        config:
+          repoURL: https://github.com/csz-akuity/testing-grounds.git
+          checkout:
+            - branch: team-alpha-project-webapp
+              path: ./src
+      
+      - uses: kustomize-set-image
+        config:
+          path: ./src
+          images:
+            - image: nginx
+            - image: postgres
+      
+      - uses: git-commit
+        config:
+          path: ./src
+          messageFromSteps:
+            - kustomize-set-image
+      - uses: git-push
+        config:
+          path: ./src
+          branch: team-alpha-project-webapp
   
   # Simple verification
   verification:
@@ -101,7 +99,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: prod
-  namespace: default
+  namespace: team-alpha-webapp
 spec:
   # Request Freight from staging stage
   requestedFreight:
@@ -114,31 +112,30 @@ spec:
   
   # Promotion template
   promotionTemplate:
-    spec:
-      steps:
-        - uses: git-clone
-          config:
-            repoURL: https://github.com/csz-akuity/testing-grounds.git
-            checkout:
-              - branch: team-alpha-project-webapp
-                path: ./src
-        
-        - uses: kustomize-set-image
-          config:
-            path: ./src
-            images:
-              - image: nginx
-              - image: postgres
-        
-        - uses: git-commit
-          config:
-            path: ./src
-            messageFromSteps:
-              - kustomize-set-image
-        - uses: git-push
-          config:
-            path: ./src
-            branch: team-alpha-project-webapp
+    steps:
+      - uses: git-clone
+        config:
+          repoURL: https://github.com/csz-akuity/testing-grounds.git
+          checkout:
+            - branch: team-alpha-project-webapp
+              path: ./src
+      
+      - uses: kustomize-set-image
+        config:
+          path: ./src
+          images:
+            - image: nginx
+            - image: postgres
+      
+      - uses: git-commit
+        config:
+          path: ./src
+          messageFromSteps:
+            - kustomize-set-image
+      - uses: git-push
+        config:
+          path: ./src
+          branch: team-alpha-project-webapp
   
   # Verification before considering promotion successful
   verification:
