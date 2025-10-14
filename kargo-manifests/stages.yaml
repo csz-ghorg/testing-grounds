@@ -20,7 +20,7 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/csz-akuity/testing-grounds.git
+            repoURL: git@github.com:csz-akuity/testing-grounds.git
             checkout:
               - branch: team-alpha-project-webapp
                 path: ./src
@@ -66,7 +66,7 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/csz-akuity/testing-grounds.git
+            repoURL: git@github.com:csz-akuity/testing-grounds.git
             checkout:
               - branch: team-alpha-project-webapp
                 path: ./src
@@ -113,7 +113,7 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/csz-akuity/testing-grounds.git
+            repoURL: git@github.com:csz-akuity/testing-grounds.git
             checkout:
               - branch: team-alpha-project-webapp
                 path: ./src
