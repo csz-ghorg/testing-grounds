@@ -1,0 +1,31 @@
+---
+# Bootstrap Application for SCM Provider Generator
+# This bootstraps the SCM-based multi-repo discovery setup
+# Apply this with Akuity CLI to get started
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kargo-scm-platform
+  namespace: argocd
+spec:
+  project: default
+  
+  source:
+    repoURL: https://github.com/csz-akuity/testing-grounds.git
+    targetRevision: main
+    path: .
+    directory:
+      # Include the SCM generator ApplicationSet (secrets managed via Akuity UI)
+      include: '{applicationset-scm-generator.yaml}'
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+
