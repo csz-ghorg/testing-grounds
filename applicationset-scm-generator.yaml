@@ -15,7 +15,7 @@ spec:
         
         github:
           # GitHub organization (required field)
-          organization: csz-akuity
+          organization: csz-ghorg
           
           # Reference to Akuity ApplicationSet secret for GitHub API access
           # This is ONLY for the GitHub API to discover repos, not for git operations
