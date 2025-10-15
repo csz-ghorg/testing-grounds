@@ -21,7 +21,7 @@ spec:
           # This is ONLY for the GitHub API to discover repos, not for git operations
           tokenRef:
             secretName: application-set-secret
-            key: github-token
+            key: git-token
           
           # Scan all branches (set to false to only use default branch)
           allBranches: true
