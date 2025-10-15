@@ -14,9 +14,8 @@ spec:
         cloneProtocol: ssh
         
         github:
-          # Your GitHub organization or user
-          # organization: csz-akuity
-          user: csz-akuity
+          # GitHub organization (required field)
+          organization: csz-akuity
           
           # Reference to Akuity ApplicationSet secret for GitHub API access
           # This is ONLY for the GitHub API to discover repos, not for git operations
