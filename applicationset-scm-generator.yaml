@@ -10,31 +10,20 @@ metadata:
 spec:
   generators:
     - scmProvider:
-        # Use SSH for cloning (since you prefer deploy keys)
-        cloneProtocol: ssh
+        cloneProtocol: https
         
         github:
-          # GitHub organization (required field)
           organization: csz-ghorg
-          
-          # Reference to Akuity ApplicationSet secret for GitHub API access
-          # This is ONLY for the GitHub API to discover repos, not for git operations
           tokenRef:
             secretName: application-set-secret
             key: git-token
           
-          # Scan all branches (set to false to only use default branch)
           allBranches: true
         
-        # Filters to include only team repositories with kargo-manifests
         filters:
-          # Only include repos that have kargo-manifests directory
           - pathsExist: 
               - kargo-manifests
-            # Optional: Only include repos with a specific naming pattern
             # repositoryMatch: ^team-.*
-            
-            # Optional: Only include repos with specific labels/topics
             # labelMatch: kargo-enabled
   
   goTemplate: true
