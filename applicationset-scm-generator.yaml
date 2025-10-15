@@ -53,7 +53,7 @@ spec:
       
       destination:
         server: https://cluster-kargo:6445
-        namespace: '{{ .repository }}-{{ .branch }}'
+        namespace: default
       
       syncPolicy:
         automated:
