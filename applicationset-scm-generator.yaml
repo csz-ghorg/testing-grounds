@@ -54,8 +54,8 @@ spec:
       
       destination:
         server: https://cluster-kargo:6445
-        # Options: namespace: '{{ .repository }}' for namespace-per-repo isolation
-        namespace: default
+        # Deploy Kargo resources to repository-specific namespace
+        namespace: '{{ .repository }}'
       
       syncPolicy:
         automated:
