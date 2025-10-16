@@ -9,6 +9,10 @@ spec:
   generators:
     - matrix:
         generators:
+          - clusters:
+              selector:
+                matchExpressions:
+                - {key: kubernetes.io/hostname, operator: In, values: [cluster-local-k3d]}
           - list:
               elements:
               - env: dev
@@ -26,7 +30,7 @@ spec:
         targetRevision: env/{{env}}
         path: app/env/{{env}}
       destination:
-        server: http://cluster-local-k3d:8001
+        name: '{{name}}'
         namespace: 'kargo-quickstart-template-{{env}}'
       syncPolicy:
         automated:
