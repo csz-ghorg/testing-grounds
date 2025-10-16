@@ -50,9 +50,7 @@ spec:
       source:
         repoURL: '{{ .url }}'  # Template vars: .organization, .repository, .branch, .sha
         targetRevision: '{{ .branch }}'
-        path: .
-        directory:
-          include: '{kargo-manifests/**,app/**}'
+        path: kargo-manifests
       
       destination:
         server: https://cluster-kargo:6445
