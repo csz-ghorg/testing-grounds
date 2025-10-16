@@ -1,6 +1,5 @@
 ---
-# ApplicationSet using SCM Provider Generator to auto-discover repositories and create applications
-# This creates applications for each repository that has the app/ directory structure
+# ApplicationSet using Matrix Generator - simpler approach like the tutorial
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -8,64 +7,30 @@ metadata:
   namespace: argocd
 spec:
   generators:
-  - scmProvider:
-      # Protocol options: https, ssh
-      cloneProtocol: https
-      
-      github:
-        organization: csz-ghorg
-        tokenRef:
-          secretName: application-set-secret
-          key: git-token
-        allBranches: true  # false = main branch only
-      
-      # Filter for repositories that have app/ directory structure
-      filters:
-        - pathsExist: [app]
-        # Optional: filter by repository name pattern
-        # - repositoryMatch: ^.*-quickstart.*
-        # Optional: filter by GitHub topics/labels
-        - labelMatch: kargo-enabled
-        # Optional: filter by branch pattern
-        # - branchMatch: ^(main|env/.*)$
-  
-  goTemplate: true
-  goTemplateOptions: ["missingkey=error"]
-  
+    - matrix:
+        generators:
+          - list:
+              elements:
+              - env: dev
+              - env: staging
+              - env: prod
   template:
     metadata:
-      # Use repository name for application name
-      name: '{{ .repository }}-app'
+      name: 'kargo-quickstart-template-{{env}}'
       annotations:
-        # Authorize Kargo to manage this application
-        kargo.akuity.io/authorized-project: '{{ .repository }}'
-        kargo.akuity.io/authorized-stage: '{{ .repository }}:dev'
-        team: '{{ .repository }}'
-        # Add branch info as annotation for reference
-        kargo.akuity.io/branch: '{{ .branch }}'
-      labels:
-        repository: '{{ .repository }}'
-        branch: '{{ .branch }}'
-        managed-by: kargo
-    
+        kargo.akuity.io/authorized-stage: 'kargo-quickstart-template:{{env}}'
     spec:
       project: default
-      
       source:
-        repoURL: '{{ .url }}'  # Template vars: .organization, .repository, .branch, .sha
-        targetRevision: '{{ .branch }}'
-        path: app/base  # Path to the application manifests
-      
+        repoURL: https://github.com/csz-ghorg/kargo-quickstart-template.git
+        targetRevision: env/{{env}}
+        path: app/env/{{env}}
       destination:
         server: http://cluster-local-k3d:8001
-        # Deploy to a namespace based on repository name
-        namespace: '{{ .repository }}'
-      
+        namespace: 'kargo-quickstart-template-{{env}}'
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
         syncOptions:
         - CreateNamespace=true
-        - PrunePropagationPolicy=foreground
-        - PruneLast=true
