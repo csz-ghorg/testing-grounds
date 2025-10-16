@@ -1,0 +1,65 @@
+---
+# ApplicationSet using SCM Provider Generator to auto-discover repositories
+# Docs: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-SCM-Provider/
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: kargo-scm-team-beta-projects
+  namespace: argocd
+spec:
+  generators:
+    - scmProvider:
+        # Protocol options: https, ssh
+        cloneProtocol: https
+        
+        github:
+          organization: csz-ghorg
+          tokenRef:
+            secretName: application-set-secret
+            key: git-token
+          allBranches: true  # false = main branch only
+        
+        # Filter examples (all conditions in a filter must match):
+        filters:
+          - pathsExist: [kargo-manifests]
+          - repositoryMatch: ^kargo-demo-gitops  # Regex on repo name
+          # - labelMatch: kargo-enabled   # Match GitHub topics/labels
+          # - branchMatch: ^(main|prod)$  # Regex on branch name
+          # - pathsDoNotExist: [.archived] # Exclude if path exists
+  
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  
+  template:
+    metadata:
+      # Use repository-branch combination for unique application names
+      name: '{{ .repository }}-{{ .branch }}'
+      annotations:
+        # Use repository name as the authorized project for Kargo (consistent across branches)
+        kargo.akuity.io/authorized-project: '{{ .repository }}'
+        team: '{{ .repository }}'
+        # Add branch info as annotation for reference
+        kargo.akuity.io/branch: '{{ .branch }}'
+      labels:
+        repository: '{{ .repository }}'
+        branch: '{{ .branch }}'
+    
+    spec:
+      project: default
+      
+      source:
+        repoURL: '{{ .url }}'  # Template vars: .organization, .repository, .branch, .sha
+        targetRevision: '{{ .branch }}'
+        path: kargo-manifests
+      
+      destination:
+        server: https://cluster-kargo:6445
+        # Deploy Kargo resources to repository-specific namespace
+        namespace: '{{ .repository }}'
+      
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
