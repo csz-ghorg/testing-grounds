@@ -45,7 +45,7 @@ spec:
         branch: '{{ .branch }}'
     
     spec:
-      project: default
+      project: team-alpha
       
       source:
         repoURL: '{{ .url }}'  # Template vars: .organization, .repository, .branch, .sha
