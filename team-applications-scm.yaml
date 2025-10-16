@@ -57,7 +57,7 @@ spec:
         path: app  # Path to the application manifests
       
       destination:
-        server: https://cluster-kargo:6445
+        server: http://cluster-local-k3d:8001
         # Deploy to a namespace based on repository name
         namespace: '{{ .repository }}'
       
