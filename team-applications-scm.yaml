@@ -1,0 +1,71 @@
+---
+# ApplicationSet using SCM Provider Generator to auto-discover repositories and create applications
+# This creates applications for each repository that has the app/ directory structure
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: team-applications-scm
+  namespace: argocd
+spec:
+  generators:
+  - scmProvider:
+      # Protocol options: https, ssh
+      cloneProtocol: https
+      
+      github:
+        organization: csz-ghorg
+        tokenRef:
+          secretName: application-set-secret
+          key: git-token
+        allBranches: true  # false = main branch only
+      
+      # Filter for repositories that have app/ directory structure
+      filters:
+        - pathsExist: [app]
+        # Optional: filter by repository name pattern
+        # - repositoryMatch: ^.*-quickstart.*
+        # Optional: filter by GitHub topics/labels
+        - labelMatch: kargo-enabled
+        # Optional: filter by branch pattern
+        # - branchMatch: ^(main|env/.*)$
+  
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  
+  template:
+    metadata:
+      # Use repository name for application name
+      name: '{{ .repository }}-app'
+      annotations:
+        # Authorize Kargo to manage this application
+        kargo.akuity.io/authorized-project: '{{ .repository }}'
+        kargo.akuity.io/authorized-stage: '{{ .repository }}:dev'
+        team: '{{ .repository }}'
+        # Add branch info as annotation for reference
+        kargo.akuity.io/branch: '{{ .branch }}'
+      labels:
+        repository: '{{ .repository }}'
+        branch: '{{ .branch }}'
+        managed-by: kargo
+    
+    spec:
+      project: default
+      
+      source:
+        repoURL: '{{ .url }}'  # Template vars: .organization, .repository, .branch, .sha
+        targetRevision: '{{ .branch }}'
+        path: app  # Path to the application manifests
+      
+      destination:
+        server: https://cluster-kargo:6445
+        # Deploy to a namespace based on repository name
+        namespace: '{{ .repository }}'
+      
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
+        - PrunePropagationPolicy=foreground
+        - PruneLast=true
