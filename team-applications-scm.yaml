@@ -54,7 +54,7 @@ spec:
       source:
         repoURL: '{{ .url }}'  # Template vars: .organization, .repository, .branch, .sha
         targetRevision: '{{ .branch }}'
-        path: app  # Path to the application manifests
+        path: app/base  # Path to the application manifests
       
       destination:
         server: http://cluster-local-k3d:8001
