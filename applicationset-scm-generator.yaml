@@ -32,13 +32,13 @@ spec:
   
   template:
     metadata:
-      # Use repository name as application name for consistency across branches
-      name: '{{ .repository }}'
+      # Use repository-branch combination for unique application names
+      name: '{{ .repository }}-{{ .branch }}'
       annotations:
-        # Use repository name as the authorized project for Kargo
+        # Use repository name as the authorized project for Kargo (consistent across branches)
         kargo.akuity.io/authorized-project: '{{ .repository }}'
         team: '{{ .repository }}'
-        # Add branch info as annotation instead of in the name
+        # Add branch info as annotation for reference
         kargo.akuity.io/branch: '{{ .branch }}'
       labels:
         repository: '{{ .repository }}'
