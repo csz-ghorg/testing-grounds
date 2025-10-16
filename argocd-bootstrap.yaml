@@ -1,24 +1,22 @@
 ---
-# Bootstrap Application - Creates ApplicationSet and AppProjects
-# Apply this once, then everything else is GitOps
+# Bootstrap Application - Deploys List Generator ApplicationSet + AppProjects
+# Deploy: akuity argocd apply -f argocd-bootstrap.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: kargo-multi-tenant-platform
+  namespace: argocd
 spec:
   project: default
-  
   source:
     repoURL: https://github.com/csz-akuity/testing-grounds.git
     targetRevision: main
     path: .
     directory:
       include: '{applicationset-git-generator.yaml,appproject-team-*.yaml}'
-  
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
-  
   syncPolicy:
     automated:
       prune: true

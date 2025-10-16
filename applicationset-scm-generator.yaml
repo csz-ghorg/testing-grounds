@@ -1,7 +1,6 @@
 ---
-# ApplicationSet using SCM Provider Generator to auto-discover team repositories
-# Based on Argo CD SCM Provider Generator documentation
-# https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-SCM-Provider/#github
+# ApplicationSet using SCM Provider Generator to auto-discover repositories
+# Docs: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-SCM-Provider/
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -10,6 +9,7 @@ metadata:
 spec:
   generators:
     - scmProvider:
+        # Protocol options: https, ssh
         cloneProtocol: https
         
         github:
@@ -17,21 +17,21 @@ spec:
           tokenRef:
             secretName: application-set-secret
             key: git-token
-          
-          allBranches: true
+          allBranches: true  # false = main branch only
         
+        # Filter examples (all conditions in a filter must match):
         filters:
-          - pathsExist: 
-              - kargo-manifests
-            # repositoryMatch: ^team-.*
-            # labelMatch: kargo-enabled
+          - pathsExist: [kargo-manifests]
+          # - repositoryMatch: ^team-.*  # Regex on repo name
+          # - labelMatch: kargo-enabled   # Match GitHub topics/labels
+          # - branchMatch: ^(main|prod)$  # Regex on branch name
+          # - pathsDoNotExist: [.archived] # Exclude if path exists
   
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
   
   template:
     metadata:
-      # Use repository name and branch for unique app names
       name: '{{ .repository }}-{{ .branch }}'
       annotations:
         kargo.akuity.io/authorized-project: '{{ .repository }}-{{ .branch }}'
@@ -41,18 +41,16 @@ spec:
         branch: '{{ .branch }}'
     
     spec:
-      # Project name - you'll need to create AppProjects for each repository/team
-      # For now, using a default project, but you can template this based on repository name
       project: default
       
       source:
-        # The SCM generator provides the clone URL
-        repoURL: '{{ .url }}'
+        repoURL: '{{ .url }}'  # Template vars: .organization, .repository, .branch, .sha
         targetRevision: '{{ .branch }}'
         path: kargo-manifests
       
       destination:
         server: https://cluster-kargo:6445
+        # Options: namespace: '{{ .repository }}' for namespace-per-repo isolation
         namespace: default
       
       syncPolicy:

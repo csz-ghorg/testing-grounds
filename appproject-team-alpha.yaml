@@ -1,27 +1,24 @@
 ---
-# AppProject for Team Alpha - Controls what they can see and do
+# AppProject for Team Alpha
+# Maps to Argo CD SSO groups for RBAC isolation
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
   name: team-alpha
   namespace: argocd
 spec:
-  description: Team Alpha - can only see their own Kargo projects
-  
+  description: Team Alpha Kargo projects
   sourceRepos:
     - 'https://github.com/csz-akuity/testing-grounds.git'
-    - '*'  # Allow other repos for Kargo promotions
-  
+    - '*'  # Required for Kargo git promotions
   destinations:
     - namespace: '*'
       server: https://kubernetes.default.svc
     - namespace: '*'
       server: https://cluster-kargo:6445
-  
   clusterResourceWhitelist:
     - group: '*'
       kind: '*'
-  
   namespaceResourceWhitelist:
     - group: '*'
       kind: '*'
