@@ -39,7 +39,7 @@ spec:
       annotations:
         # Authorize Kargo to manage this application
         kargo.akuity.io/authorized-project: '{{ .repository }}'
-        kargo.akuity.io/authorized-stage: '{{ .repository }}:dev,{{ .repository }}:staging,{{ .repository }}:prod'
+        kargo.akuity.io/authorized-stage: '{{ .repository }}:dev'
         team: '{{ .repository }}'
         # Add branch info as annotation for reference
         kargo.akuity.io/branch: '{{ .branch }}'
