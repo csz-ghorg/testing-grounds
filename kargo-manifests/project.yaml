@@ -1,6 +1,6 @@
 ---
 # Kargo Project - Each team manages their own Kargo manifests
-# This file lives in: github.com/csz-akuity/testing-grounds (branch: team-alpha-project-webapp)
+# This file lives in: github.com/csz-ghorg/testing-grounds (branch: team-alpha-project-webapp)
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Project
 metadata:

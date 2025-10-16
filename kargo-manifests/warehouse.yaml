@@ -16,5 +16,5 @@ spec:
         
     # Watch Git repo for config changes
     - git:
-        repoURL: https://github.com/csz-akuity/testing-grounds.git
+        repoURL: https://github.com/csz-ghorg/testing-grounds.git
         branch: team-alpha-project-webapp
