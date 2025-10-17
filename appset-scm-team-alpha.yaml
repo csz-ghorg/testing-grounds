@@ -24,7 +24,7 @@ spec:
           - pathsExist: [kargo-manifests]
           - repositoryMatch: ^kargo-quickstart-template  # Regex on repo name
           # - labelMatch: kargo-enabled   # Match GitHub topics/labels
-          # - branchMatch: ^(main|prod)$  # Regex on branch name
+          - branchMatch: ^(team-alpha-.*)$  # Regex on branch name
           # - pathsDoNotExist: [.archived] # Exclude if path exists
   
   goTemplate: true
