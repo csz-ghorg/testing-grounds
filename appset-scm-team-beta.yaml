@@ -23,7 +23,7 @@ spec:
         filters:
           - repositoryMatch: ^kargo-demo-gitops
             pathsExist: [kargo-manifests]
-            branchMatch: ^team-alpha-.*$
+            branchMatch: ^team-beta-.*$
           - repositoryMatch: ^kargo-quickstart-template
             pathsExist: [kargo-manifests]
             branchMatch: ^team-beta-.*$

@@ -4,10 +4,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kargo-scm-team-alpha-platform
+  name: kargo-scm-platform
   namespace: argocd
 spec:
-  project: team-alpha
+  project: default
   source:
     repoURL: https://github.com/csz-akuity/testing-grounds.git
     targetRevision: main
