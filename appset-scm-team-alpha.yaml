@@ -22,9 +22,9 @@ spec:
         # Filter examples (all conditions in a filter must match):
         filters:
           - pathsExist: [kargo-manifests]
-          - repositoryMatch: ^kargo-quickstart-template  # Regex on repo name
+          # - repositoryMatch: ^.*$  # Match all repos in org (default behavior)
           # - labelMatch: kargo-enabled   # Match GitHub topics/labels
-          - branchMatch: ^(team-alpha-.*)$  # Regex on branch name
+          - branchMatch: ^(team-alpha-.*)$  # Regex on branch name - MUST match team-alpha prefix
           # - pathsDoNotExist: [.archived] # Exclude if path exists
   
   goTemplate: true
@@ -37,7 +37,7 @@ spec:
       annotations:
         # Use repository name as the authorized project for Kargo (consistent across branches)
         kargo.akuity.io/authorized-project: '{{ .repository }}'
-        team: '{{ .repository }}'
+        team: team-alpha
         # Add branch info as annotation for reference
         kargo.akuity.io/branch: '{{ .branch }}'
       labels:
