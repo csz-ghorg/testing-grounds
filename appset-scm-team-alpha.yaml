@@ -4,7 +4,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: kargo-scm-team-alpha-projects
+  name: team-alpha-projects
   namespace: argocd
 spec:
   generators:
@@ -22,11 +22,9 @@ spec:
           - repositoryMatch: ^kargo-demo-gitops
             pathsExist: [kargo-manifests]
             branchMatch: ^team-alpha-.*$
-            labelMatch: kargo-enabled
           - repositoryMatch: ^kargo-quickstart-template
             pathsExist: [kargo-manifests]
-            branchMatch: ^team-alpha-.*$
-            labelMatch: kargo-enabled            
+            branchMatch: ^team-alpha-.*$         
   
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
