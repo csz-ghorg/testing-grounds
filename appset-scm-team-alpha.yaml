@@ -22,7 +22,7 @@ spec:
         # Filter examples (all conditions in a filter must match):
         filters:
           - pathsExist: [kargo-manifests]
-          - repositoryMatch: ^kargo-quickstart-template-.*  # Regex on repo name
+          - repositoryMatch: ^kargo-quickstart-template  # Regex on repo name
           # - labelMatch: kargo-enabled   # Match GitHub topics/labels
           # - branchMatch: ^(main|prod)$  # Regex on branch name
           # - pathsDoNotExist: [.archived] # Exclude if path exists

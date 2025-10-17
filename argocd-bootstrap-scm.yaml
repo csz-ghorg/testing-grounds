@@ -4,16 +4,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kargo-scm-platform
+  name: kargo-scm-team-alpha-platform
   namespace: argocd
 spec:
-  project: team-beta
+  project: team-alpha
   source:
     repoURL: https://github.com/csz-akuity/testing-grounds.git
     targetRevision: main
     path: .
     directory:
-      include: '{appset-scm-team-beta.yaml}'
+      include: '{appset-scm-team-alpha.yaml,appset-scm-team-beta.yaml}'
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
