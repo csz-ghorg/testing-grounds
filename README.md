@@ -233,8 +233,6 @@ policy.default: ''
 
 ## Screenshots
 
-> **Note**: To add the actual screenshots, save the images you have to the `images/` directory with the following names:
-
 ### ArgoCD Applications Dashboard - Team Alpha View
 
 ![Team Alpha Applications](images/argocd-team-alpha-applications.png)
@@ -254,12 +252,6 @@ policy.default: ''
 
 ![All Applications](images/argocd-all-applications.png)
 *Admin users can see all applications across all projects and teams*
-
-**To add screenshots:**
-
-1. Save your screenshots to the `images/` directory
-2. Name them exactly as referenced above
-3. The images will automatically display in the README
 
 ## Deployment
 
