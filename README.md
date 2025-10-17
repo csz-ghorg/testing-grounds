@@ -1,6 +1,6 @@
 # ArgoCD Multi-Team Setup with SCM Provider Generator and Okta SSO
 
-This repository (`testing-grounds`) contains the example configuration for a multi-team ArgoCD setup using Akuity (managed ArgoCD) with Okta SSO integration and team-based access control.
+This repository contains the example configuration for a multi-team ArgoCD setup using Akuity (managed ArgoCD) with Okta SSO integration and team-based access control.
 
 ## Overview
 
@@ -28,7 +28,7 @@ This setup provides:
 
 ### Repository Structure
 
-This repository (`testing-grounds`) automatically deploys ApplicationSets for each target repository:
+This repository automatically deploys ApplicationSets for each target repository:
 
 - **Bootstrap Application**: `kargo-scm-platform` deploys all ApplicationSets
 - **Target Repositories**:
