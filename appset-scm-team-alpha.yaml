@@ -18,14 +18,15 @@ spec:
             secretName: application-set-secret
             key: git-token
           allBranches: true  # false = main branch only
-        
-        # Filter examples (all conditions in a filter must match):
         filters:
-          - pathsExist: [kargo-manifests]
-          # - repositoryMatch: ^.*$  # Match all repos in org (default behavior)
-          # - labelMatch: kargo-enabled   # Match GitHub topics/labels
-          - branchMatch: ^(team-alpha-.*)$  # Regex on branch name - MUST match team-alpha prefix
-          # - pathsDoNotExist: [.archived] # Exclude if path exists
+          - repositoryMatch: ^kargo-demo-gitops
+            pathsExist: [kargo-manifests]
+            branchMatch: ^team-alpha-.*$
+            labelMatch: kargo-enabled
+          - repositoryMatch: ^kargo-quickstart-template
+            pathsExist: [kargo-manifests]
+            branchMatch: ^team-alpha-.*$
+            labelMatch: kargo-enabled            
   
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
@@ -40,6 +41,8 @@ spec:
         team: team-alpha
         # Add branch info as annotation for reference
         kargo.akuity.io/branch: '{{ .branch }}'
+        # Debug info
+        argocd.argoproj.io/sync-wave: "1"
       labels:
         repository: '{{ .repository }}'
         branch: '{{ .branch }}'
