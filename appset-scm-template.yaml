@@ -1,10 +1,14 @@
 ---
+# Template for creating team-specific ApplicationSets
+# Copy this file and replace {{TEAM_NAME}} with your team name
+# Example: appset-scm-team-charlie.yaml
+
 # ApplicationSet using SCM Provider Generator to auto-discover repositories
 # Docs: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-SCM-Provider/
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: team-alpha-projects
+  name: kargo-scm-{{TEAM_NAME}}-projects
   namespace: argocd
 spec:
   generators:
@@ -13,18 +17,18 @@ spec:
         cloneProtocol: https
         
         github:
-          organization: csz-ghorg
+          organization: csz-ghorg  # Update this for your organization
           tokenRef:
             secretName: application-set-secret
             key: git-token
           allBranches: true  # false = main branch only
+        
+        # Filter examples (all conditions in a filter must match):
         filters:
           - repositoryMatch: ^kargo-demo-gitops
             pathsExist: [kargo-manifests]
-            branchMatch: ^team-alpha-.*$
-          - repositoryMatch: ^kargo-quickstart-template
-            pathsExist: [kargo-manifests]
-            branchMatch: ^team-alpha-.*$         
+            branchMatch: ^{{TEAM_NAME}}$
+            labelMatch: kargo-enabled
   
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
@@ -36,18 +40,16 @@ spec:
       annotations:
         # Use repository name as the authorized project for Kargo (consistent across branches)
         kargo.akuity.io/authorized-project: '{{ .repository }}'
-        team: team-alpha
+        team: {{TEAM_NAME}}
         # Add branch info as annotation for reference
         kargo.akuity.io/branch: '{{ .branch }}'
-        # Debug info
-        argocd.argoproj.io/sync-wave: "1"
       labels:
         repository: '{{ .repository }}'
         branch: '{{ .branch }}'
-        team: team-alpha
+        team: {{TEAM_NAME}}
     
     spec:
-      project: team-alpha
+      project: {{TEAM_NAME}}
       
       source:
         repoURL: '{{ .url }}'  # Template vars: .organization, .repository, .branch, .sha
