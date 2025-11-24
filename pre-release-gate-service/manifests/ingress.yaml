@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gate-service
+  namespace: gate-service
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: gate.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: gate-service
+            port:
+              number: 80
+
