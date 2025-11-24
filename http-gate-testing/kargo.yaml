@@ -13,6 +13,7 @@ spec:
   subscriptions:
   - git:
       repoURL: https://github.com/csz-ghorg/testing-grounds.git
+      branch: main
       includePaths:
       - http-gate-testing
 ---
