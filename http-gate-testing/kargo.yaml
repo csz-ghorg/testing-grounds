@@ -2,24 +2,25 @@
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Project
 metadata:
-  name: gate-testing
+  name: http-gate-testing
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
   name: git-repository
-  namespace: gate-testing
+  namespace: http-gate-testing
 spec:
   subscriptions:
   - git:
       repoURL: https://github.com/csz-ghorg/testing-grounds.git
-      branch: csz-add-gate-service
+      includePaths:
+      - http-gate-testing
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: test-stage
-  namespace: gate-testing
+  namespace: http-gate-testing
 spec:
   requestedFreight:
   - origin:
