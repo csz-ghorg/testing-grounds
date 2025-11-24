@@ -23,7 +23,7 @@ spec:
         - /bin/sh
         - -c
         - |
-          cat > /app/server.py << 'EOF'
+          mkdir -p /app && cat > /app/server.py << 'EOF'
           import json
           import os
           from http.server import HTTPServer, BaseHTTPRequestHandler
