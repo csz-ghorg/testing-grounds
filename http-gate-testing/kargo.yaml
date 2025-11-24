@@ -1,0 +1,119 @@
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Project
+metadata:
+  name: http-gate-testing
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: git-repository
+  namespace: http-gate-testing
+spec:
+  subscriptions:
+  - git:
+      repoURL: https://github.com/csz-ghorg/testing-grounds.git
+      branch: main
+      includePaths:
+      - http-gate-testing
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test-stage
+  namespace: http-gate-testing
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: git-repository
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/csz-ghorg/testing-grounds.git
+      - name: gateServiceUrl
+        # Use the gate service deployed via ArgoCD
+        # For local testing: http://gate-service.gate-service.svc.cluster.local
+        # Or use the Ingress URL if configured: http://gate.local
+        value: http://gate-service.gate-service.svc.cluster.local
+      steps:
+      # Step 1: Always succeed to extract the decision and error message
+      - uses: http
+        as: gate-check
+        config:
+          method: POST
+          url: ${{ vars.gateServiceUrl }}
+          headers:
+          - name: Content-Type
+            value: application/json
+          - name: Accept
+            value: application/json
+          body: |
+            ${{ quote({
+              "metadata": {
+                "stage": ctx.stage,
+                "freight": ctx.targetFreight.name,
+                "commit": commitFrom(vars.gitRepo).ID,
+                "branch": commitFrom(vars.gitRepo).Branch ?? "",
+                "message": commitFrom(vars.gitRepo).Message ?? ""
+              }
+            }) }}
+          # Force success to ensure outputs are extracted
+          successExpression: "true"
+          outputs:
+          - name: decision
+            fromExpression: response.body.decision ?? 'NOGO'
+          - name: errorMessage
+            fromExpression: response.body.message ?? response.body.error ?? 'Pre-release gate check failed'
+          - name: errorDetails
+            fromExpression: response.body.details ?? response.body.reason ?? 'No additional details provided'
+          - name: errorUrl
+            fromExpression: response.body.url ?? response.body.detailsUrl ?? ''
+
+      # Step 2: Fail if NOGO
+      - uses: http
+        as: gate-blocked
+        if: ${{ outputs['gate-check']?.decision == 'NOGO' }}
+        config:
+          method: POST
+          url: ${{ vars.gateServiceUrl }}
+          headers:
+          - name: Content-Type
+            value: application/json
+          body: |
+            ${{ quote({
+              "metadata": {
+                "stage": ctx.stage,
+                "freight": ctx.targetFreight.name,
+                "commit": commitFrom(vars.gitRepo).ID,
+                "branch": commitFrom(vars.gitRepo).Branch ?? "",
+                "message": commitFrom(vars.gitRepo).Message ?? ""
+              }
+            }) }}
+          # Fail if the gate service returns NOGO
+          failureExpression: response.body.decision == 'NOGO'
+          outputs:
+          - name: decision
+            fromExpression: response.body.decision ?? 'NOGO'
+          - name: errorMessage
+            fromExpression: response.body.message ?? response.body.error ?? 'Pre-release gate check failed'
+          - name: errorDetails
+            fromExpression: response.body.details ?? response.body.reason ?? 'No additional details provided'
+          - name: errorUrl
+            fromExpression: response.body.url ?? response.body.detailsUrl ?? ''
+
+      - uses: set-metadata
+        if: ${{ failure() && outputs['gate-check']?.decision == 'NOGO' }}
+        config:
+          updates:
+            - kind: Stage
+              name: ${{ ctx.stage }}
+              values:
+                preReleaseGateError:
+                  message: ${{ outputs['gate-check'].errorMessage }}
+                  details: ${{ outputs['gate-check'].errorDetails }}
+                  url: ${{ outputs['gate-check'].errorUrl }}
+                  decision: ${{ outputs['gate-check'].decision }}

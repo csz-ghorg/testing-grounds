@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gate-service-config
+  namespace: gate-service
+data:
+  # Set to "GO" to allow promotions, "NOGO" to block them
+  decision: "NOGO"
+  message: "Pre-release gate check failed"
+  details: "This is a mock pre-release gate service. Update the ConfigMap to change the decision."
+  # URL returned in the error response - points to the service for testing
+  # For ingress: http://gate.local
+  # For service: http://gate-service.gate-service.svc.cluster.local
+  url: "http://gate-service.gate-service.svc.cluster.local"

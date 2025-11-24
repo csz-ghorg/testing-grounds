@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gate-service
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/csz-ghorg/testing-grounds.git
+    targetRevision: HEAD
+    path: pre-release-gate-service/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gate-service
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true

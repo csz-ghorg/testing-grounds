@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gate-service
+  namespace: gate-service
+  labels:
+    app: gate-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gate-service
+  template:
+    metadata:
+      labels:
+        app: gate-service
+    spec:
+      containers:
+      - name: gate-service
+        # Using a simple Python HTTP server that reads from ConfigMap
+        image: python:3.11-slim
+        command:
+        - /bin/sh
+        - -c
+        - |
+          mkdir -p /app && cat > /app/server.py << 'EOF'
+          import json
+          import os
+          from http.server import HTTPServer, BaseHTTPRequestHandler
+          
+          class GateHandler(BaseHTTPRequestHandler):
+              def do_POST(self):
+                  # Read config from mounted ConfigMap
+                  decision = os.environ.get('GATE_DECISION', 'NOGO')
+                  message = os.environ.get('GATE_MESSAGE', 'Pre-release gate check failed')
+                  details = os.environ.get('GATE_DETAILS', 'No details provided')
+                  url = os.environ.get('GATE_URL', '')
+                  
+                  response = {
+                      "decision": decision,
+                      "message": message,
+                      "details": details
+                  }
+                  if url:
+                      response["url"] = url
+                  
+                  self.send_response(200)
+                  self.send_header('Content-Type', 'application/json')
+                  self.end_headers()
+                  self.wfile.write(json.dumps(response).encode())
+              
+              def do_GET(self):
+                  # Health check endpoint
+                  self.send_response(200)
+                  self.send_header('Content-Type', 'application/json')
+                  self.end_headers()
+                  self.wfile.write(json.dumps({"status": "ok"}).encode())
+          
+          if __name__ == '__main__':
+              server = HTTPServer(('', 8080), GateHandler)
+              server.serve_forever()
+          EOF
+          python /app/server.py
+        env:
+        - name: GATE_DECISION
+          valueFrom:
+            configMapKeyRef:
+              name: gate-service-config
+              key: decision
+        - name: GATE_MESSAGE
+          valueFrom:
+            configMapKeyRef:
+              name: gate-service-config
+              key: message
+        - name: GATE_DETAILS
+          valueFrom:
+            configMapKeyRef:
+              name: gate-service-config
+              key: details
+        - name: GATE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: gate-service-config
+              key: url
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
