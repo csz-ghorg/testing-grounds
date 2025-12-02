@@ -12,7 +12,7 @@ spec:
   source:
     repoURL: https://github.com/csz-ghorg/testing-grounds.git
     targetRevision: HEAD
-    path: pre-release-gate-service/manifests
+    path: http-gate-testing/manifests
   destination:
     server: https://kubernetes.default.svc
     namespace: gate-service
