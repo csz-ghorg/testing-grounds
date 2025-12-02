@@ -5,6 +5,7 @@ metadata:
   namespace: gate-service
   labels:
     app: gate-service
+    target-revision: HEAD
 spec:
   replicas: 1
   selector:
