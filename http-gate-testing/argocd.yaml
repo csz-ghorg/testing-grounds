@@ -14,7 +14,7 @@ spec:
     targetRevision: HEAD
     path: http-gate-testing/manifests
   destination:
-    server: https://kubernetes.default.svc
+    server: http://cluster-local-k3d:8001
     namespace: gate-service
   syncPolicy:
     syncOptions:
