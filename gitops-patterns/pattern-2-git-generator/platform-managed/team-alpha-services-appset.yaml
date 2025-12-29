@@ -13,6 +13,7 @@ metadata:
   labels:
     managed-by: platform
     team: team-alpha
+    gitops-patterns: "true"
 spec:
   generators:
   - git:
@@ -25,6 +26,7 @@ spec:
       labels:
         team: team-alpha
         managed-by: platform-appset
+        gitops-patterns: "true"
     spec:
       project: team-alpha        # Fixed project - tenants can't change this
       source:

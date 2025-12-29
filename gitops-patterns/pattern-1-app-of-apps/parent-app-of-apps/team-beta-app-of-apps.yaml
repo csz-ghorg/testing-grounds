@@ -10,6 +10,8 @@ kind: Application
 metadata:
   name: team-beta-gitops
   namespace: argocd
+  labels:
+    gitops-patterns: "true"
 spec:
   project: default  # Platform-managed, uses default project
   source:

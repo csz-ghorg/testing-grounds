@@ -9,6 +9,7 @@ metadata:
   labels:
     team: team-beta
     managed-by: app-of-apps
+    gitops-patterns: "true"
 spec:
   generators:
   - git:
@@ -21,6 +22,7 @@ spec:
       labels:
         team: team-beta
         managed-by: appset
+        gitops-patterns: "true"
     spec:
       project: team-beta
       source:
