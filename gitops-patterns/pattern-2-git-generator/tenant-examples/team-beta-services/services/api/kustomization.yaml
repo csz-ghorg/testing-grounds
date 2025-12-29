@@ -1,0 +1,22 @@
+---
+# Example: API service Kustomization
+# Tenant commits this to team-beta-services/services/api/
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: api
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+
+commonLabels:
+  app: api
+  team: team-beta
+
+images:
+  - name: api
+    newName: ghcr.io/csz-ghorg/api
+    newTag: latest
+

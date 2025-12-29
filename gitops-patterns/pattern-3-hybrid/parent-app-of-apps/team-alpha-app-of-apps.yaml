@@ -1,0 +1,24 @@
+---
+# Parent App-of-Apps Application for Team Alpha (Hybrid Pattern)
+# Platform team manages this - syncs ApplicationSet manifests from team-alpha's Git repo
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: team-alpha-gitops
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/csz-akuity/testing-grounds.git
+    path: gitops-patterns/pattern-3-hybrid/tenant-examples/team-alpha-gitops/applicationsets
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+

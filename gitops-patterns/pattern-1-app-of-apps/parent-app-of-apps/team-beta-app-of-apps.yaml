@@ -1,0 +1,28 @@
+---
+# Parent App-of-Apps Application for Team Beta
+# Platform team manages this - syncs ApplicationSet/Application manifests from team-beta's Git repo
+# Deploy: kubectl apply -f team-beta-app-of-apps.yaml
+#
+# NOTE: In production, this should point to a separate tenant Git repository (e.g., team-beta-gitops).
+# This example uses the testing-grounds repo for demonstration purposes only.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: team-beta-gitops
+  namespace: argocd
+spec:
+  project: default  # Platform-managed, uses default project
+  source:
+    repoURL: https://github.com/csz-akuity/testing-grounds.git  # Tenant's Git repo (testing-grounds for demo)
+    path: gitops-patterns/pattern-1-app-of-apps/tenant-examples/team-beta-gitops  # Path to tenant manifests
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd            # Applications/ApplicationSets go to argocd namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+

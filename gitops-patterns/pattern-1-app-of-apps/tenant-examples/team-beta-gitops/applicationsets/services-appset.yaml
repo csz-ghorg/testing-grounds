@@ -1,0 +1,36 @@
+---
+# Tenant's ApplicationSet manifest (committed to team-beta-gitops repo)
+# This ApplicationSet will be synced by the parent app-of-apps Application
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: team-beta-services
+  namespace: argocd
+spec:
+  generators:
+  - git:
+      repoURL: https://github.com/csz-akuity/testing-grounds.git
+      directories:
+      - path: gitops-patterns/pattern-2-git-generator/tenant-examples/team-beta-services/services/*
+  template:
+    metadata:
+      name: '{{path.basename}}'
+      labels:
+        team: team-beta
+        managed-by: app-of-apps
+    spec:
+      project: team-beta
+      source:
+        repoURL: https://github.com/csz-akuity/testing-grounds.git
+        path: '{{path}}'
+        targetRevision: HEAD
+      destination:
+        server: https://cluster-kargo:6445
+        namespace: '{{path.basename}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+

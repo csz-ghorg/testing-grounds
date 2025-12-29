@@ -1,0 +1,26 @@
+---
+# Tenant's Application manifest (committed to team-beta-gitops repo)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-service
+  namespace: argocd
+  labels:
+    team: team-beta
+    managed-by: app-of-apps
+spec:
+  project: team-beta
+  source:
+    repoURL: https://github.com/csz-akuity/testing-grounds.git
+    path: gitops-patterns/pattern-2-git-generator/tenant-examples/team-beta-services/services/api
+    targetRevision: HEAD
+  destination:
+    server: https://cluster-kargo:6445
+    namespace: my-service
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+

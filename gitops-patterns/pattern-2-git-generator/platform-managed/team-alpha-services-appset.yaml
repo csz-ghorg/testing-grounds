@@ -1,0 +1,43 @@
+---
+# Platform-managed ApplicationSet for Team Alpha
+# Discovers services in team-alpha-services repo and generates Applications
+# Deploy: kubectl apply -f team-alpha-services-appset.yaml
+#
+# NOTE: In production, repoURL should point to a separate tenant service repository (e.g., team-alpha-services).
+# This example uses the testing-grounds repo for demonstration purposes only.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: team-alpha-services
+  namespace: argocd
+  labels:
+    managed-by: platform
+    team: team-alpha
+spec:
+  generators:
+  - git:
+      repoURL: https://github.com/csz-akuity/testing-grounds.git  # Tenant service repo (testing-grounds for demo)
+      directories:
+      - path: gitops-patterns/pattern-2-git-generator/tenant-examples/team-alpha-services/services/*  # Path to services
+  template:
+    metadata:
+      name: '{{path.basename}}'
+      labels:
+        team: team-alpha
+        managed-by: platform-appset
+    spec:
+      project: team-alpha        # Fixed project - tenants can't change this
+      source:
+        repoURL: https://github.com/csz-akuity/testing-grounds.git  # Tenant service repo (testing-grounds for demo)
+        path: '{{path}}'
+        targetRevision: HEAD
+      destination:
+        server: https://cluster-kargo:6445
+        namespace: '{{path.basename}}'  # Each service gets its own namespace
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+

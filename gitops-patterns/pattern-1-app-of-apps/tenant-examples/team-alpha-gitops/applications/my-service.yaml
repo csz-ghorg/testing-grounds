@@ -1,0 +1,27 @@
+---
+# Tenant's Application manifest (committed to team-alpha-gitops repo)
+# This Application will be synced by the parent app-of-apps Application
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-service
+  namespace: argocd
+  labels:
+    team: team-alpha
+    managed-by: app-of-apps
+spec:
+  project: team-alpha
+  source:
+    repoURL: https://github.com/csz-akuity/testing-grounds.git
+    path: gitops-patterns/pattern-2-git-generator/tenant-examples/team-alpha-services/services/frontend
+    targetRevision: HEAD
+  destination:
+    server: https://cluster-kargo:6445
+    namespace: my-service
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+

@@ -1,0 +1,44 @@
+---
+# Example: Multi-cluster ApplicationSet using List generator
+# Shows flexibility of ApplicationSet generators that tenants can use
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: team-alpha-multi-cluster
+  namespace: argocd
+  labels:
+    team: team-alpha
+    managed-by: app-of-apps
+spec:
+  generators:
+  - list:
+      elements:
+      - cluster: production
+        namespace: production
+        server: https://prod-cluster:6443
+      - cluster: staging
+        namespace: staging
+        server: https://staging-cluster:6443
+  template:
+    metadata:
+      name: 'team-alpha-app-{{cluster}}'
+      labels:
+        team: team-alpha
+        cluster: '{{cluster}}'
+        managed-by: appset
+    spec:
+      project: team-alpha
+      source:
+        repoURL: https://github.com/csz-akuity/testing-grounds.git
+        path: gitops-patterns/pattern-2-git-generator/tenant-examples/team-alpha-services/services/frontend
+        targetRevision: HEAD
+      destination:
+        server: '{{server}}'
+        namespace: '{{namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
