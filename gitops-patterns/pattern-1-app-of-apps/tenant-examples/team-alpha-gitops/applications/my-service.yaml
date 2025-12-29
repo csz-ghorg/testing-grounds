@@ -19,7 +19,7 @@ spec:
     path: gitops-patterns/pattern-2-git-generator/tenant-examples/team-alpha-services/services/frontend
     targetRevision: csz-patterns
   destination:
-    server: https://cluster-kargo:6445
+    server: http://cluster-local-k3d:8001
     namespace: my-service
   syncPolicy:
     automated:

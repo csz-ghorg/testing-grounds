@@ -35,7 +35,7 @@ spec:
         path: '{{path}}'
         targetRevision: csz-patterns
       destination:
-        server: https://cluster-kargo:6445
+        server: http://cluster-local-k3d:8001
         namespace: '{{path.basename}}'
       syncPolicy:
         automated:
