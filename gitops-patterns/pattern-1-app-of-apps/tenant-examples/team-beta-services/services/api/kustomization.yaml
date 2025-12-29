@@ -10,11 +10,15 @@ resources:
   - service.yaml
   - ingress.yaml
 
-nameReference:
-  - kind: Service
-    fieldSpecs:
-      - kind: Ingress
-        path: spec/rules/http/paths/backend/service/name
+replacements:
+  - source:
+      kind: Service
+      name: api
+    targets:
+      - select:
+          kind: Ingress
+        fieldPaths:
+          - spec.rules.[].http.paths.[].backend.service.name
 
 commonLabels:
   app: api
