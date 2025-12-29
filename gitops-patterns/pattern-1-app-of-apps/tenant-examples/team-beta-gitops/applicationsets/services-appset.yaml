@@ -19,7 +19,10 @@ spec:
       - path: gitops-patterns/pattern-2-git-generator/tenant-examples/team-beta-services/services/*
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: 'pattern1-{{path.basename}}'
+      namespace: argocd
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
       labels:
         team: team-beta
         managed-by: app-of-apps
