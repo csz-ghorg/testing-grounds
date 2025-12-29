@@ -10,16 +10,6 @@ resources:
   - service.yaml
   - ingress.yaml
 
-replacements:
-  - source:
-      kind: Service
-      name: frontend
-    targets:
-      - select:
-          kind: Ingress
-        fieldPaths:
-          - spec.rules.[].http.paths.[].backend.service.name
-
 commonLabels:
   app: frontend
   team: team-alpha

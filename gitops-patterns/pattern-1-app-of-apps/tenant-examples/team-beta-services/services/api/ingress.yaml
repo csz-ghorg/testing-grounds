@@ -11,7 +11,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: api
+            name: pattern1-api
             port:
               number: 80
 
