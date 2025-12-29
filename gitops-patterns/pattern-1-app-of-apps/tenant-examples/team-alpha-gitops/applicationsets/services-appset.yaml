@@ -14,6 +14,7 @@ spec:
   generators:
   - git:
       repoURL: https://github.com/csz-akuity/testing-grounds.git
+      revision: csz-patterns
       directories:
       - path: gitops-patterns/pattern-2-git-generator/tenant-examples/team-alpha-services/services/*
   template:
