@@ -28,7 +28,7 @@ spec:
       source:
         repoURL: https://github.com/csz-akuity/testing-grounds.git
         path: '{{path}}'
-        targetRevision: HEAD
+        targetRevision: csz-patterns
       destination:
         server: https://cluster-kargo:6445
         namespace: '{{path.basename}}'

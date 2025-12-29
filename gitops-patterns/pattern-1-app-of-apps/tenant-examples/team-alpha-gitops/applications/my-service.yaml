@@ -15,7 +15,7 @@ spec:
   source:
     repoURL: https://github.com/csz-akuity/testing-grounds.git
     path: gitops-patterns/pattern-2-git-generator/tenant-examples/team-alpha-services/services/frontend
-    targetRevision: HEAD
+    targetRevision: csz-patterns
   destination:
     server: https://cluster-kargo:6445
     namespace: my-service

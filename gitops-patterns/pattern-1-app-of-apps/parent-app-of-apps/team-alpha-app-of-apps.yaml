@@ -17,9 +17,9 @@ spec:
   source:
     repoURL: https://github.com/csz-akuity/testing-grounds.git  # Tenant's Git repo (testing-grounds for demo)
     path: gitops-patterns/pattern-1-app-of-apps/tenant-examples/team-alpha-gitops  # Path to tenant manifests
-    targetRevision: HEAD
+    targetRevision: csz-patterns
   destination:
-    server: https://kubernetes.default.svc
+    server: http://cluster-local-k3d:8001
     namespace: argocd            # Applications/ApplicationSets go to argocd namespace
   syncPolicy:
     automated:

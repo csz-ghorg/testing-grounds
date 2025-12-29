@@ -13,9 +13,9 @@ spec:
   source:
     repoURL: https://github.com/csz-akuity/testing-grounds.git
     path: gitops-patterns/pattern-3-hybrid/tenant-examples/team-beta-gitops/applicationsets
-    targetRevision: HEAD
+    targetRevision: csz-patterns
   destination:
-    server: https://kubernetes.default.svc
+    server: http://cluster-local-k3d:8001
     namespace: argocd
   syncPolicy:
     automated:
