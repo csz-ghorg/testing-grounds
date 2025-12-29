@@ -16,11 +16,11 @@ spec:
   project: team-alpha
   source:
     repoURL: https://github.com/csz-akuity/testing-grounds.git
-    path: gitops-patterns/pattern-2-git-generator/tenant-examples/team-alpha-services/services/frontend
+    path: gitops-patterns/pattern-1-app-of-apps/tenant-examples/team-alpha-services/services/backend
     targetRevision: csz-patterns
   destination:
     server: http://cluster-local-k3d:8001
-    namespace: my-service
+    namespace: backend
   syncPolicy:
     automated:
       prune: true

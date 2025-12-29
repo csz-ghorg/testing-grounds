@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: api
+
+namePrefix: pattern1-
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+
+nameReference:
+  - kind: Service
+    fieldSpecs:
+      - kind: Ingress
+        path: spec/rules/http/paths/backend/service/name
+
+commonLabels:
+  app: api
+  team: team-beta
+
+images:
+  - name: api
+    newName: ghcr.io/csz-ghorg/api
+    newTag: latest
+
