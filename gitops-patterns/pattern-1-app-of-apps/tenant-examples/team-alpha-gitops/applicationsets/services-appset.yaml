@@ -35,7 +35,7 @@ spec:
         targetRevision: csz-patterns
       destination:
         server: http://cluster-local-k3d:8001
-        namespace: '{{path.basename}}'
+        namespace: 'pattern1-{{path.basename}}'
       syncPolicy:
         automated:
           prune: true

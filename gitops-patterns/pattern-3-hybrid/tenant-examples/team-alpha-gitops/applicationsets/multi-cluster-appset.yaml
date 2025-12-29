@@ -17,14 +17,17 @@ spec:
   - list:
       elements:
       - cluster: production
-        namespace: production
+        namespace: pattern3-production
         server: https://prod-cluster:6443
       - cluster: staging
-        namespace: staging
+        namespace: pattern3-staging
         server: https://staging-cluster:6443
   template:
     metadata:
-      name: 'team-alpha-app-{{cluster}}'
+      name: 'pattern3-team-alpha-app-{{cluster}}'
+      namespace: argocd
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
       labels:
         team: team-alpha
         cluster: '{{cluster}}'

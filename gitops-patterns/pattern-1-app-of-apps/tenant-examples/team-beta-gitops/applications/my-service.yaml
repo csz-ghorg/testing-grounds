@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: team-beta-my-service
+  name: pattern1-team-beta-my-service
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -19,7 +19,7 @@ spec:
     targetRevision: csz-patterns
   destination:
     server: http://cluster-local-k3d:8001
-    namespace: my-service
+    namespace: pattern1-my-service
   syncPolicy:
     automated:
       prune: true

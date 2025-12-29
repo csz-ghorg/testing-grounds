@@ -41,7 +41,7 @@ spec:
         targetRevision: csz-patterns
       destination:
         server: http://cluster-local-k3d:8001
-        namespace: '{{path.basename}}'  # Each service gets its own namespace
+        namespace: 'pattern2-{{path.basename}}'
       syncPolicy:
         automated:
           prune: true
