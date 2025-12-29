@@ -19,7 +19,7 @@ spec:
     targetRevision: csz-patterns
   destination:
     server: http://cluster-local-k3d:8001
-    namespace: pattern1-my-service
+    namespace: my-service
   syncPolicy:
     automated:
       prune: true

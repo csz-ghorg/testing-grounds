@@ -17,10 +17,10 @@ spec:
   - list:
       elements:
       - cluster: production
-        namespace: pattern3-production
+        namespace: production
         server: https://prod-cluster:6443
       - cluster: staging
-        namespace: pattern3-staging
+        namespace: staging
         server: https://staging-cluster:6443
   template:
     metadata:
