@@ -6,6 +6,8 @@ kind: Application
 metadata:
   name: my-service
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
   labels:
     team: team-alpha
     managed-by: app-of-apps

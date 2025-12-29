@@ -6,6 +6,8 @@ kind: ApplicationSet
 metadata:
   name: team-alpha-services
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
   labels:
     team: team-alpha
     managed-by: app-of-apps

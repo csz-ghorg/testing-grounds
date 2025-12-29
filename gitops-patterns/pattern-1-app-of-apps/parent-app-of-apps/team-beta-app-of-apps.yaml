@@ -15,9 +15,11 @@ metadata:
 spec:
   project: default  # Platform-managed, uses default project
   source:
-    repoURL: https://github.com/csz-akuity/testing-grounds.git  # Tenant's Git repo (testing-grounds for demo)
-    path: gitops-patterns/pattern-1-app-of-apps/tenant-examples/team-beta-gitops  # Path to tenant manifests
+    repoURL: https://github.com/csz-akuity/testing-grounds.git
+    path: gitops-patterns/pattern-1-app-of-apps/tenant-examples/team-beta-gitops
     targetRevision: csz-patterns
+    directory:
+      recurse: true
   destination:
     server: http://cluster-local-k3d:8001
     namespace: argocd            # Applications/ApplicationSets go to argocd namespace

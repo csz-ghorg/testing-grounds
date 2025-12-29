@@ -6,6 +6,8 @@ kind: ApplicationSet
 metadata:
   name: team-alpha-services
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
   labels:
     gitops-patterns: "true"
 spec:
