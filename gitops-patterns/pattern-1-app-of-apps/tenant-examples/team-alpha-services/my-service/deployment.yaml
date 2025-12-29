@@ -1,21 +1,20 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: my-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend
+      app: my-service
   template:
     metadata:
       labels:
-        app: backend
+        app: my-service
     spec:
       containers:
-      - name: backend
-        image: ghcr.io/csz-ghorg/backend:latest
+      - name: my-service
+        image: ghcr.io/csz-ghorg/my-service:latest
         ports:
         - containerPort: 8080
 

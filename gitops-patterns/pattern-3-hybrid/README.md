@@ -30,16 +30,12 @@ This pattern allows tenants to commit ApplicationSet manifests to Git. App-of-ap
 ```
 pattern-3-hybrid/
 ├── README.md                          # This file
-├── parent-app-of-apps/               # Platform-managed parent applications
-│   ├── team-alpha-app-of-apps.yaml
-│   └── team-beta-app-of-apps.yaml
-└── tenant-examples/                   # Example tenant Git repo structures
-    ├── team-alpha-gitops/            # Simulated team-alpha Git repo
-    │   └── applicationsets/
-    │       └── services-appset.yaml
-    └── team-beta-gitops/             # Simulated team-beta Git repo
+├── parent-app-of-apps/               # Platform-managed parent application
+│   └── team-alpha-app-of-apps.yaml
+└── tenant-examples/                   # Example tenant Git repo structure
+    └── team-alpha-gitops/            # Simulated team-alpha Git repo
         └── applicationsets/
-            └── services-appset.yaml
+            └── services-appset.yaml   # Generates Applications for services/*
 ```
 
 ## When to Use

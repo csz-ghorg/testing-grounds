@@ -21,20 +21,18 @@ This pattern allows tenants to commit both ApplicationSet and Application manife
 ```
 pattern-1-app-of-apps/
 ├── README.md                          # This file
-├── parent-app-of-apps/               # Platform-managed parent applications
-│   ├── team-alpha-app-of-apps.yaml   # Parent app for team-alpha
-│   └── team-beta-app-of-apps.yaml    # Parent app for team-beta
-└── tenant-examples/                   # Example tenant Git repo structures
+├── parent-app-of-apps/               # Platform-managed parent application
+│   └── team-alpha-app-of-apps.yaml   # Parent app for team-alpha
+└── tenant-examples/                   # Example tenant Git repo structure
     ├── team-alpha-gitops/            # Simulated team-alpha Git repo
     │   ├── applicationsets/
-    │   │   └── services-appset.yaml
+    │   │   └── services-appset.yaml  # Generates Applications for services/*
     │   └── applications/
-    │       └── my-service.yaml
-    └── team-beta-gitops/             # Simulated team-beta Git repo
-        ├── applicationsets/
-        │   └── services-appset.yaml
-        └── applications/
-            └── my-service.yaml
+    │       └── my-service.yaml        # Explicit Application
+    └── team-alpha-services/          # Team-alpha service source code
+        ├── services/
+        │   └── frontend/              # Service discovered by ApplicationSet
+        └── my-service/               # Service managed by explicit Application
 ```
 
 ## Benefits

@@ -29,23 +29,12 @@ This pattern has the platform team manage the ApplicationSet. Tenants commit app
 ```
 pattern-2-git-generator/
 ├── README.md                          # This file
-├── platform-managed/                  # Platform-managed ApplicationSets
-│   ├── team-alpha-services-appset.yaml
-│   └── team-beta-services-appset.yaml
-└── tenant-examples/                   # Example tenant Git repo structures
-    ├── team-alpha-services/          # Simulated team-alpha service repo
-    │   └── services/
-    │       ├── frontend/
-    │       │   └── kustomization.yaml
-    │       ├── backend/
-    │       │   └── kustomization.yaml
-    │       └── database/
-    │           └── kustomization.yaml
-    └── team-beta-services/           # Simulated team-beta service repo
+├── platform-managed/                  # Platform-managed ApplicationSet
+│   └── team-alpha-services-appset.yaml
+└── tenant-examples/                   # Example tenant Git repo structure
+    └── team-alpha-services/          # Simulated team-alpha service repo
         └── services/
-            ├── api/
-            │   └── kustomization.yaml
-            └── worker/
+            └── frontend/             # Service discovered by ApplicationSet
                 └── kustomization.yaml
 ```
 
