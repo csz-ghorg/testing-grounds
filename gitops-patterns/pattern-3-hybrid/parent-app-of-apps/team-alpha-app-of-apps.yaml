@@ -4,7 +4,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: team-alpha-gitops
+  name: pattern3-team-alpha-gitops
   namespace: argocd
   labels:
     gitops-patterns: "true"

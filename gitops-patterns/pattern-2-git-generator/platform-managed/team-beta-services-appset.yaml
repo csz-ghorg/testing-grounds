@@ -8,7 +8,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: team-beta-services
+  name: pattern2-team-beta-services
   namespace: argocd
   labels:
     managed-by: platform
