@@ -7,6 +7,8 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
   labels:
     target-revision: HEAD
+  annotations:
+    notifications.argoproj.io/subscribe.on-deployed.github-notifications: ""
 spec:
   project: default
   source:
