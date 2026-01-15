@@ -16,7 +16,7 @@ spec:
     directory:
       recurse: true  
   destination:
-    server: https://kubernetes.default.svc
+    server: http://cluster-temp-cluster:8001
     namespace: check-testing
   syncPolicy:
     automated:
