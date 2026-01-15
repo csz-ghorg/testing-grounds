@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: health-check-test-resources
+  namespace: argocd
+  # Add finalizer to ensure resources are cleaned up when app is deleted
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/your-org/your-repo.git  # UPDATE: Your Git repo with test resources
+    path: test-resources  # UPDATE: Path to test-resources directory in your repo
+    targetRevision: main  # UPDATE: Your branch
+    directory:
+      recurse: true  # Include all YAML files in the directory
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: grip-testing
+  syncPolicy:
+    automated:
+      prune: true  # Automatically delete resources when removed from Git
+      selfHeal: true  # Automatically sync when resources are modified outside ArgoCD
+    syncOptions:
+      - CreateNamespace=true  # Create the namespace if it doesn't exist
+      - PrunePropagationPolicy=foreground  # Wait for resources to be deleted
+      - PruneLast=true  # Prune resources last during sync
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

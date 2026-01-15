@@ -1,0 +1,106 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: test-scaledobject
+  namespace: grip-testing
+  labels:
+    app: test-app
+spec:
+  scaleTargetRef:
+    name: test-deployment
+    kind: Deployment
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+    - type: cpu
+      metadata:
+        type: Utilization
+        value: "70"
+status:
+  conditions:
+    - type: Ready
+      status: "True"
+      message: "ScaledObject is ready"
+    - type: Paused
+      status: "False"
+    - type: Fallback
+      status: "False"
+  health:
+    numberOfFailures: 0
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: test-scaledobject-degraded
+  namespace: grip-testing
+  labels:
+    app: test-app
+spec:
+  scaleTargetRef:
+    name: test-deployment
+    kind: Deployment
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+    - type: cpu
+      metadata:
+        type: Utilization
+        value: "70"
+status:
+  conditions:
+    - type: Ready
+      status: "False"
+      message: "ScaledObject is not ready"
+    - type: Paused
+      status: "False"
+    - type: Fallback
+      status: "False"
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: test-scaledobject-suspended
+  namespace: grip-testing
+  labels:
+    app: test-app
+spec:
+  scaleTargetRef:
+    name: test-deployment
+    kind: Deployment
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+    - type: cpu
+      metadata:
+        type: Utilization
+        value: "70"
+status:
+  conditions:
+    - type: Ready
+      status: "True"
+      message: "ScaledObject is ready"
+    - type: Paused
+      status: "True"
+      message: "ScaledObject is paused"
+    - type: Fallback
+      status: "False"
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: test-scaledobject-progressing
+  namespace: grip-testing
+  labels:
+    app: test-app
+spec:
+  scaleTargetRef:
+    name: test-deployment
+    kind: Deployment
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+    - type: cpu
+      metadata:
+        type: Utilization
+        value: "70"
+# No status - should show as Progressing
