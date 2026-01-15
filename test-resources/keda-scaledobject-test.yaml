@@ -2,7 +2,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: test-scaledobject
-  namespace: grip-testing
+  namespace: check-testing
   labels:
     app: test-app
 spec:
@@ -32,7 +32,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: test-scaledobject-degraded
-  namespace: grip-testing
+  namespace: check-testing
   labels:
     app: test-app
 spec:
@@ -60,7 +60,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: test-scaledobject-suspended
-  namespace: grip-testing
+  namespace: check-testing
   labels:
     app: test-app
 spec:
@@ -89,7 +89,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: test-scaledobject-progressing
-  namespace: grip-testing
+  namespace: check-testing
   labels:
     app: test-app
 spec:
