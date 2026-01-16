@@ -13,6 +13,7 @@ spec:
   maxReplicaCount: 10
   triggers:
     - type: cpu
+      metricType: Utilization
       metadata:
         value: "70"
 # Status will be set by KEDA operator based on actual conditions
@@ -32,6 +33,7 @@ spec:
   maxReplicaCount: 10
   triggers:
     - type: cpu
+      metricType: Utilization
       metadata:
         value: "70"
 # Status will be set by KEDA operator - this one should show as degraded/healthy
@@ -52,6 +54,7 @@ spec:
   maxReplicaCount: 10
   triggers:
     - type: cpu
+      metricType: Utilization
       metadata:
         value: "70"
 # Status will be set by KEDA operator - to test suspended, pause this ScaledObject manually
@@ -71,6 +74,7 @@ spec:
   maxReplicaCount: 10
   triggers:
     - type: cpu
+      metricType: Utilization
       metadata:
         value: "70"
 # No status - should show as Progressing
