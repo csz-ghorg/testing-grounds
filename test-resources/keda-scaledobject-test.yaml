@@ -27,7 +27,7 @@ metadata:
     app: test-app-degraded
 spec:
   scaleTargetRef:
-    name: test-deployment-degraded
+    name: nonexistent-deployment  # Invalid deployment to cause Ready=False
     kind: Deployment
   minReplicaCount: 1
   maxReplicaCount: 10
@@ -36,8 +36,7 @@ spec:
       metricType: Utilization
       metadata:
         value: "70"
-# Status will be set by KEDA operator - this one should show as degraded/healthy
-# (your health check treats degraded as healthy)
+# Invalid scaleTargetRef - KEDA will set Ready=False, health check treats this as Healthy
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
@@ -46,6 +45,8 @@ metadata:
   namespace: check-testing
   labels:
     app: test-app-suspended
+  annotations:
+    scaledobject.keda.sh/paused-replicas: "0"  # Pause this ScaledObject to test Suspended status
 spec:
   scaleTargetRef:
     name: test-deployment-suspended
@@ -57,7 +58,7 @@ spec:
       metricType: Utilization
       metadata:
         value: "70"
-# Status will be set by KEDA operator - to test suspended, pause this ScaledObject manually
+# Paused via annotation - KEDA will set Paused=True condition
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
@@ -77,4 +78,6 @@ spec:
       metricType: Utilization
       metadata:
         value: "70"
-# No status - should show as Progressing
+# Note: This will show as Healthy once KEDA processes it (Ready=True, Paused=False)
+# To test Progressing, you'd need a ScaledObject that's still being created or has no status
+# In practice, once KEDA reconciles, it will have Ready=True and show as Healthy
