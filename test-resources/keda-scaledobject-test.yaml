@@ -16,29 +16,7 @@ spec:
       metricType: Utilization
       metadata:
         value: "70"
-# Status will be set by KEDA operator based on actual conditions
----
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: test-scaledobject-degraded
-  namespace: check-testing
-  labels:
-    app: test-app-degraded
-spec:
-  scaleTargetRef:
-    name: test-deployment-degraded
-    kind: Deployment
-  minReplicaCount: 1
-  maxReplicaCount: 10
-  triggers:
-    - type: cpu
-      metricType: Utilization
-      metadata:
-        value: "70"
-# Note: This will show as Healthy once KEDA processes it (Ready=True, Paused=False)
-# To test degraded status (Ready=False), you'd need a real failure scenario
-# The health check treats Ready=False as Healthy anyway 
+# Status will be set by KEDA operator - should show as Healthy (Ready=True, Paused=False)
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
@@ -60,26 +38,4 @@ spec:
       metricType: Utilization
       metadata:
         value: "70"
-# Paused via annotation - KEDA will set Paused=True condition
----
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: test-scaledobject-progressing
-  namespace: check-testing
-  labels:
-    app: test-app-progressing
-spec:
-  scaleTargetRef:
-    name: test-deployment-progressing
-    kind: Deployment
-  minReplicaCount: 1
-  maxReplicaCount: 10
-  triggers:
-    - type: cpu
-      metricType: Utilization
-      metadata:
-        value: "70"
-# Note: This will show as Healthy once KEDA processes it (Ready=True, Paused=False)
-# To test Progressing, you'd need a ScaledObject that's still being created or has no status
-# In practice, once KEDA reconciles, it will have Ready=True and show as Healthy
+# Paused via annotation - KEDA will set Paused=True condition, showing as Suspended
