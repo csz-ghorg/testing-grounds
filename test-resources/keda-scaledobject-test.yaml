@@ -16,17 +16,7 @@ spec:
       metadata:
         type: Utilization
         value: "70"
-status:
-  conditions:
-    - type: Ready
-      status: "True"
-      message: "ScaledObject is ready"
-    - type: Paused
-      status: "False"
-    - type: Fallback
-      status: "False"
-  health:
-    numberOfFailures: 0
+# Status will be set by KEDA operator based on actual conditions
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
@@ -34,10 +24,10 @@ metadata:
   name: test-scaledobject-degraded
   namespace: check-testing
   labels:
-    app: test-app
+    app: test-app-degraded
 spec:
   scaleTargetRef:
-    name: test-deployment
+    name: test-deployment-degraded
     kind: Deployment
   minReplicaCount: 1
   maxReplicaCount: 10
@@ -46,15 +36,8 @@ spec:
       metadata:
         type: Utilization
         value: "70"
-status:
-  conditions:
-    - type: Ready
-      status: "False"
-      message: "ScaledObject is not ready"
-    - type: Paused
-      status: "False"
-    - type: Fallback
-      status: "False"
+# Status will be set by KEDA operator - this one should show as degraded/healthy
+# (your health check treats degraded as healthy)
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
@@ -62,10 +45,10 @@ metadata:
   name: test-scaledobject-suspended
   namespace: check-testing
   labels:
-    app: test-app
+    app: test-app-suspended
 spec:
   scaleTargetRef:
-    name: test-deployment
+    name: test-deployment-suspended
     kind: Deployment
   minReplicaCount: 1
   maxReplicaCount: 10
@@ -74,16 +57,7 @@ spec:
       metadata:
         type: Utilization
         value: "70"
-status:
-  conditions:
-    - type: Ready
-      status: "True"
-      message: "ScaledObject is ready"
-    - type: Paused
-      status: "True"
-      message: "ScaledObject is paused"
-    - type: Fallback
-      status: "False"
+# Status will be set by KEDA operator - to test suspended, pause this ScaledObject manually
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
@@ -91,10 +65,10 @@ metadata:
   name: test-scaledobject-progressing
   namespace: check-testing
   labels:
-    app: test-app
+    app: test-app-progressing
 spec:
   scaleTargetRef:
-    name: test-deployment
+    name: test-deployment-progressing
     kind: Deployment
   minReplicaCount: 1
   maxReplicaCount: 10

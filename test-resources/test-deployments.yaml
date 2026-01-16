@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment
+  namespace: check-testing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment-degraded
+  namespace: check-testing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app-degraded
+  template:
+    metadata:
+      labels:
+        app: test-app-degraded
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment-suspended
+  namespace: check-testing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app-suspended
+  template:
+    metadata:
+      labels:
+        app: test-app-suspended
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment-progressing
+  namespace: check-testing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app-progressing
+  template:
+    metadata:
+      labels:
+        app: test-app-progressing
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
