@@ -38,7 +38,7 @@ spec:
         value: "70"
 # Note: This will show as Healthy once KEDA processes it (Ready=True, Paused=False)
 # To test degraded status (Ready=False), you'd need a real failure scenario
-# The health check treats Ready=False as Healthy anyway (see grip-resource-customizations.tf)
+# The health check treats Ready=False as Healthy anyway 
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
@@ -48,7 +48,7 @@ metadata:
   labels:
     app: test-app-suspended
   annotations:
-    scaledobject.keda.sh/paused-replicas: "0"  # Pause this ScaledObject to test Suspended status
+    autoscaling.keda.sh/paused-replicas: "0"  # Pause this ScaledObject to test Suspended status
 spec:
   scaleTargetRef:
     name: test-deployment-suspended
