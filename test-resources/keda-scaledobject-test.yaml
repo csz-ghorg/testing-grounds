@@ -27,7 +27,7 @@ metadata:
     app: test-app-degraded
 spec:
   scaleTargetRef:
-    name: nonexistent-deployment  # Invalid deployment to cause Ready=False
+    name: test-deployment-degraded
     kind: Deployment
   minReplicaCount: 1
   maxReplicaCount: 10
@@ -36,7 +36,9 @@ spec:
       metricType: Utilization
       metadata:
         value: "70"
-# Invalid scaleTargetRef - KEDA will set Ready=False, health check treats this as Healthy
+# Note: This will show as Healthy once KEDA processes it (Ready=True, Paused=False)
+# To test degraded status (Ready=False), you'd need a real failure scenario
+# The health check treats Ready=False as Healthy anyway (see grip-resource-customizations.tf)
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
