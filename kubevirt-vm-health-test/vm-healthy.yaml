@@ -8,7 +8,7 @@ metadata:
     kubevirt.io/latest-observed-api-version: v1
     kubevirt.io/storage-observed-api-version: v1alpha3
 spec:
-  running: true
+  running: false  # set false to avoid virt-launcher starting QEMU (no PID logs)
   template:
     metadata:
       creationTimestamp: null

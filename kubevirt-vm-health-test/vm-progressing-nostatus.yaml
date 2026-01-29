@@ -9,7 +9,7 @@ metadata:
   labels:
     app.kubernetes.io/instance: testv
 spec:
-  running: true
+  running: false  # set false to avoid virt-launcher starting QEMU (no PID logs)
   template:
     metadata:
       creationTimestamp: null

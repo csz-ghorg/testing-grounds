@@ -9,7 +9,7 @@ metadata:
     kubevirt.io/storage-observed-api-version: v1alpha3
   creationTimestamp: "2021-09-14T22:15:10Z"
 spec:
-  running: true
+  running: false  # set false to avoid virt-launcher starting QEMU (no PID logs)
   template:
     metadata:
       creationTimestamp: null
