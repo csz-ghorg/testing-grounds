@@ -1,0 +1,19 @@
+# Argo CD Application for KubeVirt VirtualMachine health check testing.
+# Set spec.source.repoURL to your git repo (e.g. https://github.com/argoproj/argo-cd.git)
+# then: kubectl apply -f application.yaml -n argocd
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubevirt-vm-health-test
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/csz-ghorg/testing-grounds.git
+    targetRevision: kubevirt-health-checks
+    path: test/e2e/testdata/kubevirt-vm-health-test
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kubevirt-health-test
+  syncPolicy:
+    automated: {}

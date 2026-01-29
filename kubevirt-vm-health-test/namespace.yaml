@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kubevirt-health-test
+  labels:
+    app.kubernetes.io/name: kubevirt-vm-health-test
