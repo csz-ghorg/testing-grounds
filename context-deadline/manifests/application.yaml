@@ -2,17 +2,16 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: slow-plugin-app
-  namespace: akuity        
 spec:
-  project: default
+  destination:
+    name: local-k3d
+    namespace: slow-plugin-test
   source:
     repoURL: https://github.com/csz-ghorg/testing-grounds.git
-    targetRevision: main
-    path: manifests
+    targetRevision: context-deadline
+    path: context-deadline/manifests
     plugin:
       name: slow-manifests
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: slow-plugin-test
+  project: default
   syncPolicy:
     automated: {}
