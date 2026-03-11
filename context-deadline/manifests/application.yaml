@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: slow-plugin-app
+  namespace: akuity        
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/csz-ghorg/testing-grounds.git
+    targetRevision: main
+    path: manifests
+    plugin:
+      name: slow-manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: slow-plugin-test
+  syncPolicy:
+    automated: {}
