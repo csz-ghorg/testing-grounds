@@ -7,11 +7,14 @@ spec:
     name: local-k3d
     namespace: slow-plugin-test
   source:
+    path: context-deadline/manifests
     repoURL: https://github.com/csz-ghorg/testing-grounds.git
     targetRevision: context-deadline
-    path: context-deadline/manifests
     plugin:
-      name: slow-manifests
+      name: slow-manifests-v1.0
+  sources: []
   project: default
   syncPolicy:
     automated: {}
+    syncOptions:
+      - CreateNamespace=true
