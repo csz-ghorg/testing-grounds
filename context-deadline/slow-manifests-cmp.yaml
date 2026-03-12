@@ -1,0 +1,15 @@
+version: v1.0
+init:
+  command:
+    - sh
+    - -c
+    - echo init complete >&2
+generate:
+  command:
+    - sh
+    - -c
+    - |
+      echo "slow-manifests: sleeping before generate..." >&2
+      sleep 300
+      cat *.yaml
+preserveFileMode: false
